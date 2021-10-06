@@ -4,7 +4,7 @@ namespace Contracts.Interfaces
 {
     public interface IPhotoAccessor
     {
-        Task<PhotoDto> AddPhoto(IFormFile file);
+        Task<PhotoUploadDto> AddPhoto(IFormFile file);
         Task<string> DeletePhoto(string publicId);
     }
 }
