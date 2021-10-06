@@ -18,5 +18,6 @@ namespace Domain.Entities
         public AppUser Creator { get; set; }
         
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+        public ICollection<Like> Likes { get; set; } = new List<Like>();
     }
 }
