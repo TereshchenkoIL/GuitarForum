@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Domain.Entities;
+
 
 namespace Contracts.Services
 {
     public interface ILikeService 
     {
-        Task<Like> GetLike(Guid topicId, bool trackChanges,
+        Task<LikeDto> GetLike(Guid topicId, bool trackChanges,
             CancellationToken cancellationToken = default);
         
         Task<IEnumerable<LikeDto>> GetAllAsync(bool trackChanges, CancellationToken cancellationToken = default);

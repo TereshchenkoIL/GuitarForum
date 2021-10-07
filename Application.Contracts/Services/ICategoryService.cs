@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Domain.Entities;
 
 namespace Contracts.Services
 {
     public interface ICategoryService 
     {
-        Task<Category> GetByIdAsync(Guid categoryId, bool trackChanges, CancellationToken cancellationToken = default);
+        Task<CategoryDto> GetByIdAsync(Guid categoryId, bool trackChanges, CancellationToken cancellationToken = default);
         Task<IEnumerable<CategoryDto>> GetAllAsync(bool trackChanges, CancellationToken cancellationToken = default);
 
         Task CreateAsync(CategoryDto categoryForCreation, CancellationToken cancellationToken = default);

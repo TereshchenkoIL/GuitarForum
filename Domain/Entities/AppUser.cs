@@ -12,7 +12,7 @@ namespace Domain.Entities
         
         public DateTime JoinData { get; set; }
         
-        public ICollection<Photo> Photos { get; set; }
+        public Photo Photo { get; set; }
         
         public ICollection<Topic> Topics { get; set; }
         public ICollection<Like> Likes { get; set; }
