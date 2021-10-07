@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -9,12 +10,12 @@ namespace Domain.Repositories
 {
     public interface IRepositoryBase<T> where T : class
     {
-        Task<IQueryable<T>> GetByConditionAsync(Expression<Func<T, bool>> expression,
+        Task<IEnumerable<T>> GetByConditionAsync(Expression<Func<T, bool>> expression,
             bool trackChanges, CancellationToken cancellationToken = default);
-        Task<IQueryable<T>> GetAllAsync(bool trackChanges, CancellationToken cancellationToken = default);
-        Task Create(T entity);
-        Task Update(T entity); 
-        Task Delete(T entity);
+        Task<IEnumerable<T>> GetAllAsync(bool trackChanges, CancellationToken cancellationToken = default);
+        void Create(T entity);
+        void Update(T entity); 
+        void Delete(T entity);
         
     }
 }

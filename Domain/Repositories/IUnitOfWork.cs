@@ -1,4 +1,6 @@
-﻿namespace Domain.Repositories
+﻿using System.Threading.Tasks;
+
+namespace Domain.Repositories
 {
     public interface IUnitOfWork
     {
@@ -11,5 +13,7 @@
          IPhotoRepository PhotoRepository { get; }
          
          ITopicRepository TopicRepository { get; }
+
+         Task<bool> SaveChangesAsync();
     }
 }
