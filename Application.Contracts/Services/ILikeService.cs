@@ -8,12 +8,13 @@ namespace Contracts.Services
 {
     public interface ILikeService 
     {
-        Task<LikeDto> GetLike(Guid topicId, bool trackChanges,
+        
+        Task<LikeDto> GetLike(string userId, Guid topicId, 
             CancellationToken cancellationToken = default);
         
-        Task<IEnumerable<LikeDto>> GetAllAsync(bool trackChanges, CancellationToken cancellationToken = default);
+        Task<IEnumerable<LikeDto>> GetAllAsync( CancellationToken cancellationToken = default);
         
-        Task CreateAsync(LikeDto lokeForCreation, CancellationToken cancellationToken = default);
+        Task CreateAsync(LikeDto likeForCreation, CancellationToken cancellationToken = default);
         Task DeleteAsync(LikeDto likeForDeletion, CancellationToken cancellationToken = default);
     }
 }

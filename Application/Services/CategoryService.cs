@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using Contracts;
 using Contracts.Services;
 using Domain.Entities;
+using Domain.Exceptions.CategoryExceptions;
 using Domain.Repositories;
 
 namespace Application.Services
@@ -12,35 +15,55 @@ namespace Application.Services
     public class CategoryService : ICategoryService
     {
         private readonly IUnitOfWork _unitOfWork;
-
-        public CategoryService(IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+        public CategoryService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        public Task<CategoryDto> GetByIdAsync(Guid categoryId, bool trackChanges, CancellationToken cancellationToken = default)
+        public async Task<CategoryDto> GetByIdAsync(Guid categoryId,  CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(categoryId, false, cancellationToken);
+
+            if (category == null)
+            {
+                throw new CategoryNotFoundException(categoryId);
+            }
+
+            return _mapper.Map<CategoryDto>(category);
         }
 
-        public Task<IEnumerable<CategoryDto>> GetAllAsync(bool trackChanges, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<CategoryDto>> GetAllAsync( CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var categories = await _unitOfWork.CategoryRepository.GetAllAsync(false, cancellationToken);
+
+            return _mapper.Map<IEnumerable<CategoryDto>>(categories);
         }
 
-        public Task CreateAsync(CategoryDto categoryForCreation, CancellationToken cancellationToken = default)
+        public async Task CreateAsync(CategoryDto categoryForCreation, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            _unitOfWork.CategoryRepository.Create(_mapper.Map<Category>(cancellationToken));
+
+            var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            if (!result) throw new CategoryCreateException(categoryForCreation.Name);
         }
 
-        public Task DeleteAsync(CategoryDto categoryForDeletion, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(CategoryDto categoryForDeletion, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            _unitOfWork.CategoryRepository.Delete(_mapper.Map<Category>(cancellationToken));
+
+            var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
+            if (!result) throw new CategoryDeleteException(categoryForDeletion.Name);
         }
 
-        public Task UpdateAsync(CategoryDto categoryForUpdation, CancellationToken cancellationToken = default)
+        public async Task UpdateAsync(CategoryDto categoryForUpdation, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            _unitOfWork.CategoryRepository.Update(_mapper.Map<Category>(cancellationToken));
+
+            var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
+            if (!result) throw new CategoryUpdateException(categoryForUpdation.Name);
         }
     }
 }

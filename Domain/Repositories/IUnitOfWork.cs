@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace Domain.Repositories
 {
     public interface IUnitOfWork
     {
+         IUserRepository UserRepository { get; }
          ICategoryRepository CategoryRepository { get; }
          
          ICommentRepository CommentRepository { get; }
@@ -14,6 +16,6 @@ namespace Domain.Repositories
          
          ITopicRepository TopicRepository { get; }
 
-         Task<bool> SaveChangesAsync();
+         Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

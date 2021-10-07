@@ -8,10 +8,10 @@ namespace Contracts.Services
 {
     public interface ICommentService
     {
-       Task<CommentDto> GetByIdAsync(Guid commentId, bool trackChanges, CancellationToken cancellationToken = default);
+       Task<CommentDto> GetByIdAsync(Guid commentId,  CancellationToken cancellationToken = default);
     
-       Task<IEnumerable<CommentDto>> GetAllAsync(bool trackChanges, CancellationToken cancellationToken = default);
-       Task<PagedList<CommentDto>> GetAllByTopicAsync(Guid topicId, PagingParams pagingParams, bool trackChanges, CancellationToken cancellationToken = default);
+       Task<IEnumerable<CommentDto>> GetAllAsync( CancellationToken cancellationToken = default);
+       Task<PagedList<CommentDto>> GetAllByTopicAsync(Guid topicId, PagingParams pagingParams, CancellationToken cancellationToken = default);
 
        Task CreateAsync(CommentDto commentForCreation, CancellationToken cancellationToken = default);
        

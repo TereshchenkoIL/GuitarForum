@@ -7,8 +7,8 @@ namespace Contracts.Services
 {
     public interface ICategoryService 
     {
-        Task<CategoryDto> GetByIdAsync(Guid categoryId, bool trackChanges, CancellationToken cancellationToken = default);
-        Task<IEnumerable<CategoryDto>> GetAllAsync(bool trackChanges, CancellationToken cancellationToken = default);
+        Task<CategoryDto> GetByIdAsync(Guid categoryId,  CancellationToken cancellationToken = default);
+        Task<IEnumerable<CategoryDto>> GetAllAsync( CancellationToken cancellationToken = default);
 
         Task CreateAsync(CategoryDto categoryForCreation, CancellationToken cancellationToken = default);
        

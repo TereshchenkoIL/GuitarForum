@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Contracts;
+﻿using Contracts;
 using Domain.Entities;
 using Profile = AutoMapper.Profile;
 namespace Application.Mapping

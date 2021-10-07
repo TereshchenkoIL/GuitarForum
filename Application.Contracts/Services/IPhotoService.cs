@@ -7,14 +7,14 @@ namespace Contracts.Services
 {
     public interface IPhotoService 
     {
-        Task<PhotoDto> GetById(Guid photoId, bool trackChanges, CancellationToken cancellationToken = default);
+        Task<PhotoDto> GetById(string photoId, CancellationToken cancellationToken = default);
         
-        Task<IEnumerable<PhotoDto>> GetAllAsync(bool trackChanges, CancellationToken cancellationToken = default);
+        Task<IEnumerable<PhotoDto>> GetAllAsync( CancellationToken cancellationToken = default);
 
         Task CreateAsync(PhotoDto photoForCreation, CancellationToken cancellationToken = default);
        
         Task DeleteAsync(PhotoDto photoForDeletion, CancellationToken cancellationToken = default);
        
-        Task UpdateAsync(PhotoDto photoForUpdation, CancellationToken cancellationToken = default);
+      
     }
 }

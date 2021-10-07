@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Domain.Repositories;
 
 namespace Persistence.Repositories
@@ -11,11 +12,21 @@ namespace Persistence.Repositories
         private ILikeRepository _likeRepository;
         private IPhotoRepository _photoRepository;
         private ITopicRepository _topicRepository;
+        private IUserRepository _userRepository;
         
         
         public UnitOfWork(DataContext context)
         {
             _context = context;
+        }
+        public IUserRepository UserRepository
+        {
+            get
+            {
+                if (_userRepository == null)
+                    _userRepository = new UserRepository(_context);
+                return _userRepository;
+            }
         }
 
         public ICategoryRepository CategoryRepository
@@ -66,9 +77,9 @@ namespace Persistence.Repositories
                 return _topicRepository;
             }
         }
-        public async Task<bool> SaveChangesAsync()
+        public async Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            return await _context.SaveChangesAsync() > 0;
+            return await _context.SaveChangesAsync(cancellationToken) > 0;
         }
     }
 }
