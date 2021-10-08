@@ -41,7 +41,7 @@ namespace Application.Services
             get
             {
                 if (_commentService == null)
-                    _commentService = new CommentService(_unitOfWork, _mapper);
+                    _commentService = new CommentService(_unitOfWork, _mapper, _userAccessor);
                 return _commentService;
             }
         }

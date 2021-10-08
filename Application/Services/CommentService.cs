@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using API.DTO;
 using AutoMapper;
 using Contracts;
+using Contracts.Interfaces;
 using Contracts.Paging;
 using Contracts.Services;
 using Domain.Entities;
@@ -19,10 +21,12 @@ namespace Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public CommentService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IUserAccessor _userAccessor;
+        public CommentService(IUnitOfWork unitOfWork, IMapper mapper, IUserAccessor userAccessor)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _userAccessor = userAccessor;
         }
         public async Task<CommentDto> GetByIdAsync(Guid commentId, CancellationToken cancellationToken = default)
         {
@@ -40,7 +44,7 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<CommentDto>>(coments);
         }
 
-        public async Task<PagedList<CommentDto>> GetAllByTopicAsync(Guid topicId, PagingParams pagingParams, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<CommentDto>> GetAllByTopicAsync(Guid topicId, CancellationToken cancellationToken = default)
         {
             var topic = await _unitOfWork.TopicRepository.GetByIdAsync(topicId,  cancellationToken);
 
@@ -48,31 +52,36 @@ namespace Application.Services
 
             var comments = await _unitOfWork.CommentRepository.GetAllByTopicAsync(topicId,  cancellationToken);
 
-            var commentsDto = _mapper.Map<IEnumerable<CommentDto>>(comments);
-
-            return new PagedList<CommentDto>(commentsDto, commentsDto.Count(), pagingParams.PageNumber,
-                pagingParams.PageSize);
+            return _mapper.Map<IEnumerable<CommentDto>>(comments);
         }
 
-        public async Task CreateAsync(CommentDto commentForCreation, CancellationToken cancellationToken = default)
+        public async Task<CommentDto> CreateAsync(CommentCreateDto commentForCreation, CancellationToken cancellationToken = default)
         {
-            _unitOfWork.CommentRepository.Create(_mapper.Map<Comment>(commentForCreation));
+            var comment = _mapper.Map<Comment>(commentForCreation);
+
+            var username = _userAccessor.GetUsername();
+
+            var user = await _unitOfWork.UserRepository.GetByUsername(username, cancellationToken);
+            comment.Author = user;
+            _unitOfWork.CommentRepository.Create(comment);
 
             var result = await  _unitOfWork.SaveChangesAsync(cancellationToken);
 
             if (!result) throw new CommentCreateException("Failed to create comment");
+
+            return _mapper.Map<CommentDto>(comment);
         }
 
-        public async Task DeleteAsync(CommentDto commentForDeletion, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(Guid commentId, CancellationToken cancellationToken = default)
         {
-            _unitOfWork.CommentRepository.Delete(_mapper.Map<Comment>(commentForDeletion));
+            _unitOfWork.CommentRepository.Delete(new Comment{Id = commentId});
 
             var result = await  _unitOfWork.SaveChangesAsync(cancellationToken);
 
             if (!result) throw new CommentDeleteException("Failed to delete comment");
         }
 
-        public async Task UpdateAsync(CommentDto commentForUpdation, CancellationToken cancellationToken = default)
+        public async Task UpdateAsync(CommentUpdateDto commentForUpdation, CancellationToken cancellationToken = default)
         {
             _unitOfWork.CommentRepository.Update(_mapper.Map<Comment>(commentForUpdation));
 

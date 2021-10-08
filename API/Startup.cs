@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Extensions;
 using API.Middleware;
+using API.SignalR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -60,7 +61,8 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-               
+                endpoints.MapHub<ChatHub>("/chat");
+
             });
         }
     }

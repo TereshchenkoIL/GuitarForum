@@ -1,4 +1,5 @@
-﻿using Contracts;
+﻿using API.DTO;
+using Contracts;
 using Domain.Entities;
 using Profile = AutoMapper.Profile;
 namespace Application.Mapping
@@ -13,7 +14,8 @@ namespace Application.Mapping
             CreateMap<CategoryDto, Category>();
             CreateMap<LikeDto, Like>();
             CreateMap<PhotoDto, Photo>();
-            
+            CreateMap<CommentCreateDto, Comment>();
+            CreateMap<CommentUpdateDto, Comment>();
             CreateMap<Comment, CommentDto>()
                 .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.Author.DisplayName))
                 .ForMember(d => d.Username, o => o.MapFrom(s => s.Author.UserName))
