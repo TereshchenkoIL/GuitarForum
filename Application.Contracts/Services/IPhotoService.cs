@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Contracts.Services
 {
@@ -11,9 +12,9 @@ namespace Contracts.Services
         
         Task<IEnumerable<PhotoDto>> GetAllAsync( CancellationToken cancellationToken = default);
 
-        Task CreateAsync(PhotoDto photoForCreation, CancellationToken cancellationToken = default);
+        Task CreateAsync(IFormFile file, CancellationToken cancellationToken = default);
        
-        Task DeleteAsync(PhotoDto photoForDeletion, CancellationToken cancellationToken = default);
+        Task DeleteAsync(string Id, CancellationToken cancellationToken = default);
        
       
     }

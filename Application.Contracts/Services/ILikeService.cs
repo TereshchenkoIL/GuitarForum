@@ -15,6 +15,7 @@ namespace Contracts.Services
         Task<IEnumerable<LikeDto>> GetAllAsync( CancellationToken cancellationToken = default);
         
         Task CreateAsync(LikeDto likeForCreation, CancellationToken cancellationToken = default);
+        Task CreateAsync(Guid topicId, CancellationToken cancellationToken = default);
         Task DeleteAsync(LikeDto likeForDeletion, CancellationToken cancellationToken = default);
     }
 }

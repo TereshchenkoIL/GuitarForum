@@ -20,11 +20,13 @@ namespace Application.Services
         
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-
-        public LikeService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IUserAccessor _userAccessor;
+    
+        public LikeService(IUnitOfWork unitOfWork, IMapper mapper, IUserAccessor userAccessor)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _userAccessor = userAccessor;
         }
 
         public async Task<LikeDto> GetLike(string userId, Guid topicId,  CancellationToken cancellationToken = default)
@@ -59,6 +61,25 @@ namespace Application.Services
             var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             if (!result) throw new LikeCreateException("Failed to create like");
+        }
+
+        public async Task CreateAsync(Guid topicId, CancellationToken cancellationToken = default)
+        {
+            var username = _userAccessor.GetUsername();
+            var user = await _unitOfWork.UserRepository.GetByUsername(username, false, cancellationToken);
+            if (user == null) throw new UserNotFound(username);
+
+            var topic = _unitOfWork.TopicRepository.GetByIdAsync(topicId, false, cancellationToken);
+
+            if (topic == null) throw new TopicNotFoundException(topicId);
+
+            var like = new LikeDto
+            {
+                AppUserId = user.Id,
+                TopicId = topicId
+            };
+
+            await CreateAsync(like, cancellationToken);
         }
 
         public async Task DeleteAsync(LikeDto likeForDeletion, CancellationToken cancellationToken = default)

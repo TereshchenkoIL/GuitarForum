@@ -1,5 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{E1AE9675-73ED-45D3-B5DE-8F2F2D88E2F3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Contracts", "Application.Contracts\Application.Contracts.csproj", "{9B54529A-DB11-45E5-8FA2-F9F3E1823246}"
@@ -9,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{008D6C68-8FA7-4008-A02B-10708CE21D5D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{74043021-A321-4A1B-A99B-59D7543E3551}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{33334E88-5620-45A6-825F-05C204CACA34}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,5 +39,9 @@ Global
 		{74043021-A321-4A1B-A99B-59D7543E3551}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74043021-A321-4A1B-A99B-59D7543E3551}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74043021-A321-4A1B-A99B-59D7543E3551}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33334E88-5620-45A6-825F-05C204CACA34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33334E88-5620-45A6-825F-05C204CACA34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33334E88-5620-45A6-825F-05C204CACA34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33334E88-5620-45A6-825F-05C204CACA34}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

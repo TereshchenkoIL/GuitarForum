@@ -16,12 +16,14 @@ namespace Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IUserAccessor _userAccessor;
+        private readonly IPhotoAccessor _photoAccessor;
 
-        public ServiceManager(IUnitOfWork unitOfWork, IMapper mapper, IUserAccessor userAccessor)
+        public ServiceManager(IUnitOfWork unitOfWork, IMapper mapper, IUserAccessor userAccessor, IPhotoAccessor photoAccessor)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _userAccessor = userAccessor;
+            _photoAccessor = photoAccessor;
         }
 
         public ICategoryService CategoryService
@@ -49,7 +51,7 @@ namespace Application.Services
             get
             {
                 if (_likeService == null)
-                    _likeService = new LikeService(_unitOfWork, _mapper);
+                    _likeService = new LikeService(_unitOfWork, _mapper, _userAccessor);
                 return _likeService;
             }
         }
@@ -57,7 +59,7 @@ namespace Application.Services
             get
             {
                 if (_photoService == null)
-                    _photoService = new PhotoService(_unitOfWork, _mapper);
+                    _photoService = new PhotoService(_unitOfWork, _mapper, _userAccessor, _photoAccessor);
                 return _photoService;
             } 
         }

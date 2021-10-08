@@ -25,7 +25,7 @@ namespace Application.Services
             _mapper = mapper;
             _userAccessor = userAccessor;
         }
-        public async Task<Profile> GetDetails(string username, CancellationToken cancellationToken)
+        public async Task<Profile> GetDetails(string username, CancellationToken cancellationToken = default)
         {
             var user = await _unitOfWork.UserRepository.GetByUsername(username, false, cancellationToken);
 
@@ -45,7 +45,7 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<TopicDto>>(topics);
         }
 
-        public async Task UpdateAsync(string displayName, string bio, CancellationToken cancellationToken)
+        public async Task UpdateAsync(string displayName, string bio, CancellationToken cancellationToken = default)
         {
             string username = _userAccessor.GetUsername();
 
@@ -53,10 +53,10 @@ namespace Application.Services
 
         }
 
-        public async Task UpdateAsync(string username, string displayName, string bio, CancellationToken cancellationToken)
+        public async Task UpdateAsync(string username, string displayName, string bio, CancellationToken cancellationToken = default)
         {
            
-            var user = await _unitOfWork.UserRepository.GetByUsername(username, true, cancellationToken);
+            var user = await _unitOfWork.UserRepository.GetByUsername(username, true, cancellationToken = default);
 
             if (!string.IsNullOrEmpty(displayName))
             {
