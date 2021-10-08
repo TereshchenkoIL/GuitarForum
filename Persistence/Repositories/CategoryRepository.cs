@@ -13,13 +13,9 @@ namespace Persistence.Repositories
         {
         }
 
-        public async Task<Category> GetByIdAsync(Guid categoryId, bool trackChanges, CancellationToken cancellationToken = default)
+        public async Task<Category> GetByIdAsync(Guid categoryId,  CancellationToken cancellationToken = default)
         {
-            return !trackChanges
-                ? await Context.Categories
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.Id == categoryId, cancellationToken: cancellationToken)
-                : await Context.Categories.FirstOrDefaultAsync(x => x.Id == categoryId,
+            return await Context.Categories.FirstOrDefaultAsync(x => x.Id == categoryId,
                     cancellationToken: cancellationToken);
 
         }

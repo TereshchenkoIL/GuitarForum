@@ -7,7 +7,7 @@ namespace Domain.Repositories
 {
     public interface ILikeRepository : IRepositoryBase<Like>
     {
-        Task<Like> GetLike(string appUserId, Guid topicId, bool trackChanges,
+        Task<Like> GetLike(string appUserId, Guid topicId, 
             CancellationToken cancellationToken = default);
     }
 }

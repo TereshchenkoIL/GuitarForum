@@ -8,8 +8,8 @@ namespace Domain.Repositories
 {
     public interface ICommentRepository : IRepositoryBase<Comment>
     {
-        Task<Comment> GetByIdAsync(Guid commentId, bool trackChanges, CancellationToken cancellationToken = default);
-        Task<IEnumerable<Comment>> GetAllByTopicAsync(Guid topicId, bool trackChanges,
+        Task<Comment> GetByIdAsync(Guid commentId,  CancellationToken cancellationToken = default);
+        Task<IEnumerable<Comment>> GetAllByTopicAsync(Guid topicId, 
             CancellationToken cancellationToken = default);
     }
 }

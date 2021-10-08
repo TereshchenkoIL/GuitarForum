@@ -18,7 +18,7 @@ namespace Contracts
         
         public Category Category { get; set; }
         
-        public AppUser Creator { get; set; }
+        public Profile Creator { get; set; }
         
     }
 }

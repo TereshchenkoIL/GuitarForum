@@ -13,14 +13,9 @@ namespace Persistence.Repositories
         {
         }
 
-        public async Task<Photo> GetById(string photoId, bool trackChanges, CancellationToken cancellationToken = default)
+        public async Task<Photo> GetById(string photoId,  CancellationToken cancellationToken = default)
         {
-            return !trackChanges
-                ? await Context.Photos
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.Id == photoId, cancellationToken: cancellationToken)
-                : await Context.Photos
-                    .Include(x => x.Owner)
+            return await Context.Photos
                     .FirstOrDefaultAsync(x => x.Id == photoId, cancellationToken: cancellationToken);
 
         }

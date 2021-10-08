@@ -29,22 +29,32 @@ namespace Application.Services
 
         public async Task<IEnumerable<TopicDto>> GetAllByCreatorIdAsync(string creatorId, CancellationToken cancellationToken = default)
         {
-            var creator = await _unitOfWork.UserRepository.GetByUserId(creatorId, false, cancellationToken);
+            var creator = await _unitOfWork.UserRepository.GetByUserId(creatorId,  cancellationToken);
 
             if (creator == null) throw new UserNotFound(creatorId);
             
-            var topics = _unitOfWork.TopicRepository.GetAllByCreatorIdAsync(creatorId, false, cancellationToken);
+            var topics = await _unitOfWork.TopicRepository.GetAllByCreatorIdAsync(creatorId,  cancellationToken);
             return _mapper.Map<IEnumerable<TopicDto>>(topics);
+        }
+
+        public async Task<IEnumerable<TopicDto>> GetAllByCreatorUsernameAsync(string username, CancellationToken cancellationToken = default)
+        {
+            var user = await _unitOfWork.UserRepository.GetByUsername(username,  cancellationToken);
+
+            if (user == null) throw new UserNotFound(username);
+
+            return await GetAllByCreatorIdAsync(user.Id,  cancellationToken);
+
         }
 
         public async Task<PagedList<TopicDto>> GetAllByCategoryIdAsync(Guid categoryId, PagingParams pagingParams, CancellationToken cancellationToken = default)
         {
-            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(categoryId, false, cancellationToken);
+            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(categoryId,  cancellationToken);
 
             if (category == null) throw new CategoryNotFoundException(categoryId);
 
 
-            var topics = await _unitOfWork.TopicRepository.GetAllByCategoryIdAsync(categoryId, false, cancellationToken);
+            var topics = await _unitOfWork.TopicRepository.GetAllByCategoryIdAsync(categoryId,  cancellationToken);
 
             var topicsDto = _mapper.Map<IEnumerable<TopicDto>>(topics);
 
@@ -54,7 +64,7 @@ namespace Application.Services
 
         public async Task<TopicDto> GetByIdAsync(Guid topicId, CancellationToken cancellationToken = default)
         {
-            var topic = await _unitOfWork.TopicRepository.GetByIdAsync(topicId, false, cancellationToken);
+            var topic = await _unitOfWork.TopicRepository.GetByIdAsync(topicId,  cancellationToken);
 
             if (topic == null) throw new TopicNotFoundException(topicId);
             
@@ -63,7 +73,7 @@ namespace Application.Services
 
         public async Task<PagedList<TopicDto>> GetAllAsync(PagingParams pagingParams, CancellationToken cancellationToken = default)
         {
-            var topics = await _unitOfWork.TopicRepository.GetAllAsync(false, cancellationToken);
+            var topics = await _unitOfWork.TopicRepository.GetAllAsync(cancellationToken);
 
             var topicsDto = _mapper.Map<IEnumerable<TopicDto>>(topics);
 

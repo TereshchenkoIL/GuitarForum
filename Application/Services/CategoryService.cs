@@ -24,7 +24,7 @@ namespace Application.Services
 
         public async Task<CategoryDto> GetByIdAsync(Guid categoryId,  CancellationToken cancellationToken = default)
         {
-            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(categoryId, false, cancellationToken);
+            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(categoryId,  cancellationToken);
 
             if (category == null)
             {
@@ -36,7 +36,7 @@ namespace Application.Services
 
         public async Task<IEnumerable<CategoryDto>> GetAllAsync( CancellationToken cancellationToken = default)
         {
-            var categories = await _unitOfWork.CategoryRepository.GetAllAsync(false, cancellationToken);
+            var categories = await _unitOfWork.CategoryRepository.GetAllAsync(cancellationToken);
 
             return _mapper.Map<IEnumerable<CategoryDto>>(categories);
         }

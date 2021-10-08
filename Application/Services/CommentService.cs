@@ -26,7 +26,7 @@ namespace Application.Services
         }
         public async Task<CommentDto> GetByIdAsync(Guid commentId, CancellationToken cancellationToken = default)
         {
-            var comment = await _unitOfWork.CommentRepository.GetByIdAsync(commentId, false, cancellationToken);
+            var comment = await _unitOfWork.CommentRepository.GetByIdAsync(commentId,  cancellationToken);
 
             if (comment == null) throw new CommentNotFoundException(commentId.ToString());
 
@@ -35,18 +35,18 @@ namespace Application.Services
 
         public async Task<IEnumerable<CommentDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            var coments = await _unitOfWork.CommentRepository.GetAllAsync(false, cancellationToken);
+            var coments = await _unitOfWork.CommentRepository.GetAllAsync( cancellationToken);
 
             return _mapper.Map<IEnumerable<CommentDto>>(coments);
         }
 
         public async Task<PagedList<CommentDto>> GetAllByTopicAsync(Guid topicId, PagingParams pagingParams, CancellationToken cancellationToken = default)
         {
-            var topic = await _unitOfWork.TopicRepository.GetByIdAsync(topicId, false, cancellationToken);
+            var topic = await _unitOfWork.TopicRepository.GetByIdAsync(topicId,  cancellationToken);
 
             if (topic == null) throw new TopicNotFoundException(topicId);
 
-            var comments = await _unitOfWork.CommentRepository.GetAllByTopicAsync(topicId, false, cancellationToken);
+            var comments = await _unitOfWork.CommentRepository.GetAllByTopicAsync(topicId,  cancellationToken);
 
             var commentsDto = _mapper.Map<IEnumerable<CommentDto>>(comments);
 

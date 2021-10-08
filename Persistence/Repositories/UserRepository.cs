@@ -12,26 +12,16 @@ namespace Persistence.Repositories
         {
         }
 
-        public async Task<AppUser> GetByUserId(string userId, bool trackChanges, CancellationToken cancellationToken)
+        public async Task<AppUser> GetByUserId(string userId,  CancellationToken cancellationToken)
         {
-            return !trackChanges
-                ? await Context.Users
-                    .Include(p => p.Photo)
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken: cancellationToken)
-                : await Context.Users
+            return await Context.Users
                     .Include(p => p.Photo)
                     .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken: cancellationToken);
         }
 
-        public async Task<AppUser> GetByUsername(string username, bool trackChanges, CancellationToken cancellationToken)
+        public async Task<AppUser> GetByUsername(string username, CancellationToken cancellationToken)
         {
-            return !trackChanges
-                ? await Context.Users
-                    .Include(p => p.Photo)
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(u => u.UserName == username, cancellationToken: cancellationToken)
-                : await Context.Users
+            return  await Context.Users
                     .Include(p => p.Photo)
                     .FirstOrDefaultAsync(u => u.UserName == username, cancellationToken: cancellationToken);
         }

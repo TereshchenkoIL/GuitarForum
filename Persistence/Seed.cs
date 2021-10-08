@@ -31,6 +31,7 @@ namespace Persistence
                     {
                         DisplayName = "Bob",
                         UserName = "bob",
+                        Bio = "bio",
                         Email = "bob@test.com",
                         JoinData = DateTime.UtcNow
                     },
@@ -38,6 +39,7 @@ namespace Persistence
                     {
                         DisplayName = "Jane",
                         UserName = "jane",
+                        Bio = "bio",
                         Email = "jane@test.com",
                         JoinData = DateTime.UtcNow
                     },
@@ -45,6 +47,7 @@ namespace Persistence
                     {
                         DisplayName = "Tom",
                         UserName = "tom",
+                        Bio = "bio",
                         Email = "tom@test.com",
                         JoinData = DateTime.UtcNow
                     },

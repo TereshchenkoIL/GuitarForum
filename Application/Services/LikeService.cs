@@ -31,15 +31,15 @@ namespace Application.Services
 
         public async Task<LikeDto> GetLike(string userId, Guid topicId,  CancellationToken cancellationToken = default)
         {
-            var user = await _unitOfWork.UserRepository.GetByUserId(userId, false, cancellationToken);
+            var user = await _unitOfWork.UserRepository.GetByUserId(userId,  cancellationToken);
 
             if (user == null) throw new UserNotFound(userId);
             
-            var topic = await _unitOfWork.TopicRepository.GetByIdAsync(topicId, false, cancellationToken);
+            var topic = await _unitOfWork.TopicRepository.GetByIdAsync(topicId,  cancellationToken);
 
             if (topic == null) throw new TopicNotFoundException(topicId);
             
-            var like = await _unitOfWork.LikeRepository.GetLike(userId, topicId, false, cancellationToken);
+            var like = await _unitOfWork.LikeRepository.GetLike(userId, topicId,  cancellationToken);
 
             if (like == null) throw new LikeNotFoundException(user.DisplayName, topic.Title);
 
@@ -49,7 +49,7 @@ namespace Application.Services
 
         public async Task<IEnumerable<LikeDto>> GetAllAsync( CancellationToken cancellationToken = default)
         {
-            var likes = await _unitOfWork.LikeRepository.GetAllAsync(false, cancellationToken);
+            var likes = await _unitOfWork.LikeRepository.GetAllAsync( cancellationToken);
 
             return _mapper.Map<IEnumerable<LikeDto>>(likes);
         }
@@ -66,10 +66,10 @@ namespace Application.Services
         public async Task CreateAsync(Guid topicId, CancellationToken cancellationToken = default)
         {
             var username = _userAccessor.GetUsername();
-            var user = await _unitOfWork.UserRepository.GetByUsername(username, false, cancellationToken);
+            var user = await _unitOfWork.UserRepository.GetByUsername(username,  cancellationToken);
             if (user == null) throw new UserNotFound(username);
 
-            var topic = _unitOfWork.TopicRepository.GetByIdAsync(topicId, false, cancellationToken);
+            var topic = _unitOfWork.TopicRepository.GetByIdAsync(topicId,  cancellationToken);
 
             if (topic == null) throw new TopicNotFoundException(topicId);
 

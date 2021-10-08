@@ -1,14 +1,18 @@
 ﻿using System.Threading.Tasks;
 using API.DTO;
 using Contracts.Services;
+using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
     public class ProfileController : BaseApiController
     {
-        public ProfileController(IServiceManager serviceManager) : base(serviceManager)
+        private readonly UserManager<AppUser> _userManager;
+        public ProfileController(IServiceManager serviceManager, UserManager<AppUser> userManager) : base(serviceManager)
         {
+            _userManager = userManager;
         }
 
         [HttpGet("username")]
@@ -27,10 +31,10 @@ namespace API.Controllers
             return Ok();
         }
 
-        [HttpGet("{id}/topics")]
-        public async Task<IActionResult> GetTopics(string id)
+        [HttpGet("{username}/topics")]
+        public async Task<IActionResult> GetTopics(string username)
         {
-            var topics = await ServiceManager.TopicService.GetAllByCreatorIdAsync(id);
+            var topics = await ServiceManager.TopicService.GetAllByCreatorUsernameAsync(username);
 
             return Ok(topics);
         }

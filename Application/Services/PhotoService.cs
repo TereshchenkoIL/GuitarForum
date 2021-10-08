@@ -32,7 +32,7 @@ namespace Application.Services
         }
         public async Task<PhotoDto> GetById(string photoId, CancellationToken cancellationToken = default)
         {
-            var photo = await _unitOfWork.PhotoRepository.GetById(photoId, false, cancellationToken);
+            var photo = await _unitOfWork.PhotoRepository.GetById(photoId,  cancellationToken);
 
             if (photo == null) throw new PhotoNotFoundException(photoId);
 
@@ -42,7 +42,7 @@ namespace Application.Services
 
         public async Task<IEnumerable<PhotoDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            var photos = await _unitOfWork.PhotoRepository.GetAllAsync(false, cancellationToken);
+            var photos = await _unitOfWork.PhotoRepository.GetAllAsync( cancellationToken);
 
             return _mapper.Map<IEnumerable<PhotoDto>>(photos);
         }
@@ -51,7 +51,7 @@ namespace Application.Services
         {
             string username = _userAccessor.GetUsername();
 
-            var user = await _unitOfWork.UserRepository.GetByUsername(username, true, cancellationToken);
+            var user = await _unitOfWork.UserRepository.GetByUsername(username,  cancellationToken);
             if (user == null) throw new UserNotFound(username);
 
             var photoResult = await _photoAccessor.AddPhoto(file);

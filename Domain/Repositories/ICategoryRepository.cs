@@ -7,6 +7,6 @@ namespace Domain.Repositories
 {
     public interface ICategoryRepository : IRepositoryBase<Category>
     {
-        Task<Category> GetByIdAsync(Guid categoryId, bool trackChanges, CancellationToken cancellationToken = default);
+        Task<Category> GetByIdAsync(Guid categoryId,  CancellationToken cancellationToken = default);
     }
 }

@@ -27,7 +27,7 @@ namespace Application.Services
         }
         public async Task<Profile> GetDetails(string username, CancellationToken cancellationToken = default)
         {
-            var user = await _unitOfWork.UserRepository.GetByUsername(username, false, cancellationToken);
+            var user = await _unitOfWork.UserRepository.GetByUsername(username,  cancellationToken);
 
             if (user == null) throw new UserNotFound(username);
 
@@ -36,11 +36,11 @@ namespace Application.Services
 
         public async Task<IEnumerable<TopicDto>> GetTopics(string username, CancellationToken cancellationToken)
         {
-            var user = await _unitOfWork.UserRepository.GetByUsername(username, false, cancellationToken);
+            var user = await _unitOfWork.UserRepository.GetByUsername(username,  cancellationToken);
 
             if (user == null) throw new UserNotFound(username);
 
-            var topics = _unitOfWork.TopicRepository.GetAllByCreatorIdAsync(user.Id, false, cancellationToken);
+            var topics = _unitOfWork.TopicRepository.GetAllByCreatorIdAsync(user.Id,  cancellationToken);
 
             return _mapper.Map<IEnumerable<TopicDto>>(topics);
         }
@@ -56,7 +56,7 @@ namespace Application.Services
         public async Task UpdateAsync(string username, string displayName, string bio, CancellationToken cancellationToken = default)
         {
            
-            var user = await _unitOfWork.UserRepository.GetByUsername(username, true, cancellationToken = default);
+            var user = await _unitOfWork.UserRepository.GetByUsername(username, cancellationToken = default);
 
             if (!string.IsNullOrEmpty(displayName))
             {

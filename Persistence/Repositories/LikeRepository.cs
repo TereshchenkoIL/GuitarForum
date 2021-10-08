@@ -13,13 +13,9 @@ namespace Persistence.Repositories
         {
         }
 
-        public async Task<Like> GetLike(string appUserId, Guid topicId, bool trackChanges, CancellationToken cancellationToken = default)
+        public async Task<Like> GetLike(string appUserId, Guid topicId, CancellationToken cancellationToken = default)
         {
-            return !trackChanges
-                ? await Context.Likes
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.AppUserId == appUserId && x.TopicId == topicId, cancellationToken: cancellationToken)
-                : await Context.Likes
+            return await Context.Likes
                     .FirstOrDefaultAsync(x => x.AppUserId == appUserId && x.TopicId == topicId, cancellationToken: cancellationToken);
 
         }

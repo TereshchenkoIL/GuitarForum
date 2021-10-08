@@ -18,23 +18,15 @@ namespace Persistence.Repositories
             Context = context;
         }
 
-        public virtual async Task<IEnumerable<T>> GetByConditionAsync(Expression<Func<T, bool>> expression, bool trackChanges, CancellationToken cancellationToken = default)
+        public virtual async Task<IEnumerable<T>> GetByConditionAsync(Expression<Func<T, bool>> expression,  CancellationToken cancellationToken = default)
         {
-            return !trackChanges
-                ? await Context.Set<T>()
-                    .Where(expression)
-                    .AsNoTracking().ToListAsync(cancellationToken: cancellationToken)
-                : await Context.Set<T>()
+            return  await Context.Set<T>()
                     .Where(expression).ToListAsync(cancellationToken: cancellationToken);
         }
 
-        public virtual async Task<IEnumerable<T>> GetAllAsync(bool trackChanges, CancellationToken cancellationToken = default)
+        public virtual async Task<IEnumerable<T>> GetAllAsync( CancellationToken cancellationToken = default)
         {
-            return !trackChanges
-                ? await Context.Set<T>()
-                    .AsNoTracking()
-                    .ToListAsync(cancellationToken: cancellationToken)
-                : await Context.Set<T>()
+            return await Context.Set<T>()
                     .ToListAsync(cancellationToken: cancellationToken);
 
         }

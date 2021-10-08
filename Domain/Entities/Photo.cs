@@ -7,6 +7,6 @@ namespace Domain.Entities
         public string Id { get; set; }
         [Required]
         public string Url { get; set; }
-        public AppUser Owner { get; set; }
+        
     }
 }
