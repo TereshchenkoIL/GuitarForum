@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities
 {
@@ -7,10 +8,11 @@ namespace Domain.Entities
     {
         public Guid Id { get; set; }
         
+        [Required]
         public string Title { get; set; }
-        
+        [Required]
         public string Body { get; set; }
-        
+        [Required]
         public DateTime CreatedAt { get; set; }
         
         public Category Category { get; set; }
