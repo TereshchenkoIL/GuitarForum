@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    public class ProfileController : BaseApiController
+    public class ProfilesController : BaseApiController
     {
         private readonly UserManager<AppUser> _userManager;
-        public ProfileController(IServiceManager serviceManager, UserManager<AppUser> userManager) : base(serviceManager)
+        public ProfilesController(IServiceManager serviceManager, UserManager<AppUser> userManager) : base(serviceManager)
         {
             _userManager = userManager;
         }

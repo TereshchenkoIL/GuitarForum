@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers
 {
     
-    public class PhotoController : BaseApiController
+    public class PhotosController : BaseApiController
     {
-        public PhotoController(IServiceManager serviceManager) : base(serviceManager)
+        public PhotosController(IServiceManager serviceManager) : base(serviceManager)
         {
         }
 

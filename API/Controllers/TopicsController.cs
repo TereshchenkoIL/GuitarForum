@@ -10,10 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers
 {
    
-    public class TopicController : BaseApiController
+    public class TopicsController : BaseApiController
     {
 
-        public TopicController(IServiceManager serviceManager) : base(serviceManager)
+        public TopicsController(IServiceManager serviceManager) : base(serviceManager)
         {
             
         }
@@ -41,6 +41,14 @@ namespace API.Controllers
             var topics = await ServiceManager.TopicService.GetAllByCreatorIdAsync(id);
 
             return Ok(topics);
+        }
+        
+        [HttpGet("{id}")]
+        public async Task<ActionResult<List<TopicDto>>> GetTopicById(Guid id)
+        {
+            var topic = await ServiceManager.TopicService.GetByIdAsync(id);
+
+            return Ok(topic);
         }
 
         [HttpPost]
