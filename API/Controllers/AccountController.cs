@@ -30,6 +30,9 @@ namespace API.Controllers
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
+            var roles = await _userManager.GetRolesAsync(user);
+
+            var isAdmin = roles.Contains("Admin");
             if (result.Succeeded)
             {
                 return new UserDto
@@ -37,6 +40,7 @@ namespace API.Controllers
                     DisplayName = user.DisplayName,
                     Image = user.Photo.Url,
                     Token = await _tokenService.CreateToken(user),
+                    isAdmin = isAdmin,
                     Username = user.UserName
                 };
             }

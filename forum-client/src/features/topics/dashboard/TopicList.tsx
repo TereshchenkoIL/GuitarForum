@@ -17,7 +17,7 @@ export default observer( function TopicList(){
         <>
         
          {topicsByDate.map(topic => (
-             <TopicListItem topic = {topic} />
+             <TopicListItem key={topic.id} topic = {topic} />
          ))}
         </>
     ); 

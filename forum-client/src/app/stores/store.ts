@@ -1,13 +1,16 @@
 import { createContext, useContext } from "react";
+import CategoryStore from "./categoryStore";
 import TopicStore from "./topicStore";
 
 interface Store{
-    topicStore: TopicStore
+    topicStore: TopicStore,
+    categoryStore: CategoryStore
 }
 
 
 export const store: Store = {
-    topicStore: new TopicStore()
+    topicStore: new TopicStore(),
+    categoryStore: new CategoryStore()
 }
 
 export const StoreContext = createContext(store);

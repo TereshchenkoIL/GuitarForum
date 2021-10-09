@@ -2,8 +2,10 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { Button, Grid, Loader } from "semantic-ui-react";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { PagingParams } from "../../../app/models/pagination";
 import { useStore } from "../../../app/stores/store";
+import CategoryMenu from "./CategoryMenu";
 import TopicList from "./TopicList";
 
 export default observer(function TopicDashboard() {
@@ -18,9 +20,10 @@ export default observer(function TopicDashboard() {
     return (
         <Grid>
             <Grid.Column width='10'>
+                <CategoryMenu />
                 {loadingInitial ? 
                 
-                "Loading" :
+               <LoadingComponent content='Loading...'/> :
                 <TopicList />}
 
             </Grid.Column>

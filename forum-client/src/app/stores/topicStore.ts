@@ -1,7 +1,8 @@
 import { makeAutoObservable, reaction, runInAction } from "mobx";
 import agent from "../api/agent";
+import Category from "../models/category";
 import { Pagination, PagingParams } from "../models/pagination";
-import { Topic } from "../models/topic";
+import { Topic, TopicFormValues } from "../models/topic";
 
 export default class TopicStore{
     topicRegistry = new Map<string, Topic>();
@@ -13,12 +14,25 @@ export default class TopicStore{
     pagingParams = new PagingParams();
 
     loadByCategory = false;
-    categoryId: string | null = null;
+    category: Category | null = null;
     
     constructor(){
         makeAutoObservable(this);
         reaction(
             () => this.loadByCategory,
+            () => {
+                this.pagingParams = new PagingParams();
+                this.topicRegistry.clear();
+                if(this.loadByCategory){
+                    this.loadTopicsByCaetgory()
+                }else{
+                    this.loadAllTopics();
+                }
+            }
+        );
+
+        reaction(
+            () => this.category,
             () => {
                 this.pagingParams = new PagingParams();
                 this.topicRegistry.clear();
@@ -54,8 +68,8 @@ export default class TopicStore{
         this.loadByCategory = state;
     }
 
-    setCategoryId = (id: string) => {
-        this.categoryId = id;
+    setCategory = (category: Category) => {
+        this.category = category;
     }
     get topicsByDate(){
         return Array.from(this.topicRegistry.values()).sort((a, b) => a.createdAt!.getTime() - b.createdAt!.getTime())
@@ -83,7 +97,7 @@ export default class TopicStore{
         try{
             this.setLoadingInitial(true);
             this.loading = true;
-            const result = await agent.Topics.listByCategory(this.categoryId!,this.axiosParams);
+            const result = await agent.Topics.listByCategory(this.category!.id!,this.axiosParams);
             result.data.forEach(topic =>{
                 this.setTopic(topic);
                 })    
@@ -102,4 +116,52 @@ export default class TopicStore{
         this.topicRegistry.set(topic.id, topic);
     }
 
+
+    
+    private getTopic = (id: string) =>{
+        return this.topicRegistry.get(id);
+    }
+
+    updateTopic = async (topic: TopicFormValues) => {
+        try{
+            await agent.Topics.update(topic);
+
+            runInAction(() => {
+                if(topic.id){
+                    let updatedtopic = {...this.getTopic(topic.id), ...topic}
+                    this.topicRegistry.set(topic.id, updatedtopic as Topic);
+                    this.selectedTopic = updatedtopic as Topic;
+                }
+
+            })
+
+        }catch(error)
+        {
+            console.log(error);
+
+            runInAction(() => {
+                this.loading = false;
+            })
+        }
+    }
+
+    deleteTopic = async (id: string) => {
+        this.loading = true;
+
+        try{
+            await agent.Topics.delete(id);
+
+            runInAction(() => {
+               this.topicRegistry.delete(id);
+               this.loading = false
+            })
+
+        }catch(error){
+            console.log(error);
+
+            runInAction(() => {
+                this.loading = false;
+            })
+        }
+    }
 }

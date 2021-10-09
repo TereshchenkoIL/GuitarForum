@@ -40,7 +40,7 @@ const Topics = {
 
 
 const Categories = {
-    list: () => axios.get<Category[]>('/Categories'),
+    list: () => axios.get<Category[]>('/Categories').then(responseBody),
     create: (category: Category) => requests.post('/Categories', category),
     update: (category: Category) => requests.put(`/Categories`, category),
     delete: (id: string) => requests.del<void>(`/Categories/${id}`),
