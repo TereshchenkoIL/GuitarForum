@@ -1,9 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using API.DTO;
 using API.Services;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -19,6 +22,17 @@ namespace API.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Current()
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => 
+                x.Email == HttpContext.User.FindFirstValue(ClaimTypes.Email));
+
+            if (user == null) return Unauthorized();
+
+            return Ok(user);
         }
 
         [HttpPost("login")]
@@ -38,9 +52,54 @@ namespace API.Controllers
                 return new UserDto
                 {
                     DisplayName = user.DisplayName,
-                    Image = user.Photo.Url,
+                    Image = user.Photo?.Url,
                     Token = await _tokenService.CreateToken(user),
                     isAdmin = isAdmin,
+                    Username = user.UserName
+                };
+            }
+
+            return Unauthorized();
+        }
+        
+        [HttpPost("register")]
+        public async Task<ActionResult<UserDto>> Login(RegisterDto registerDto)
+        {
+            var user = await _userManager.FindByEmailAsync(registerDto.Email);
+
+            if (user != null)
+            {
+                ModelState.AddModelError("email", "Email taken");
+                return ValidationProblem(ModelState);
+            }
+
+            user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == registerDto.Username);
+
+            if (user != null)
+            {
+                ModelState.AddModelError("username", "Username taken");
+                return ValidationProblem(ModelState);
+            }
+
+            user = new AppUser
+            {
+                DisplayName = registerDto.DisplayName,
+                Email = registerDto.Email,
+                UserName = registerDto.Username
+            };
+
+
+            var result = await _userManager.CreateAsync(user, registerDto.Password);
+
+            
+            if (result.Succeeded)
+            {
+                return new UserDto
+                {
+                    DisplayName = user.DisplayName,
+                    Image = user.Photo.Url,
+                    Token = await _tokenService.CreateToken(user),
+                    isAdmin = false,
                     Username = user.UserName
                 };
             }

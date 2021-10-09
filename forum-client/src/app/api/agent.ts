@@ -2,9 +2,19 @@ import axios, {AxiosResponse} from "axios";
 import Category from "../models/category";
 import { PaginatedResult } from "../models/pagination";
 import { Topic, TopicFormValues } from "../models/topic";
+import { User, UserFormValues } from "../models/user";
+import { store } from "../stores/store";
 
 
 axios.defaults.baseURL = 'http://localhost:5000/api'
+
+
+axios.interceptors.request.use(config => {
+    const token = store.userStore.token;
+
+    if(token) config.headers.Authorization = `Bearer ${token}`
+    return config;
+})
 
 axios.interceptors.response.use(async response => {  
 
@@ -46,10 +56,17 @@ const Categories = {
     delete: (id: string) => requests.del<void>(`/Categories/${id}`),
 }
 
+const Account = {
+    current: () => requests.get<User>('/account'),
+    login: (user: UserFormValues) => requests.post<User>('/account/login',user),
+    register: (user: UserFormValues) => requests.post<User>('/account/register',user)
+}
+
 
 const agent = {
     Topics,
-    Categories
+    Categories,
+    Account
 };
 
 export default agent;
