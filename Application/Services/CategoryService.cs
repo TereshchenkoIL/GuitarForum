@@ -50,12 +50,15 @@ namespace Application.Services
             if (!result) throw new CategoryCreateException(categoryForCreation.Name);
         }
 
-        public async Task DeleteAsync(CategoryDto categoryForDeletion, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(Guid categoryId, CancellationToken cancellationToken = default)
         {
-            _unitOfWork.CategoryRepository.Delete(_mapper.Map<Category>(cancellationToken));
+            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(categoryId, cancellationToken);
+
+            if (category == null) throw new CategoryNotFoundException(categoryId);
+           _unitOfWork.CategoryRepository.Delete(category);
 
             var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
-            if (!result) throw new CategoryDeleteException(categoryForDeletion.Name);
+            if (!result) throw new CategoryDeleteException(category.Name);
         }
 
         public async Task UpdateAsync(CategoryDto categoryForUpdation, CancellationToken cancellationToken = default)

@@ -58,8 +58,7 @@ namespace Application.Services
 
             var topicsDto = _mapper.Map<IEnumerable<TopicDto>>(topics);
 
-            return new PagedList<TopicDto>(topicsDto, topicsDto.Count(), pagingParams.PageNumber,
-                pagingParams.PageSize);
+            return  PagedList<TopicDto>.Create(topicsDto, pagingParams.PageNumber, pagingParams.PageSize);
         }
 
         public async Task<TopicDto> GetByIdAsync(Guid topicId, CancellationToken cancellationToken = default)
@@ -77,8 +76,7 @@ namespace Application.Services
 
             var topicsDto = _mapper.Map<IEnumerable<TopicDto>>(topics);
 
-            return new PagedList<TopicDto>(topicsDto, topicsDto.Count(), pagingParams.PageNumber,
-                pagingParams.PageSize);
+            return PagedList<TopicDto>.Create(topicsDto, pagingParams.PageNumber, pagingParams.PageSize);
         }
 
         public async Task CreateAsync(TopicDto topicForCreation, CancellationToken cancellationToken = default)

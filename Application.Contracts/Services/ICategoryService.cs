@@ -12,7 +12,7 @@ namespace Contracts.Services
 
         Task CreateAsync(CategoryDto categoryForCreation, CancellationToken cancellationToken = default);
        
-        Task DeleteAsync(CategoryDto categoryForDeletion, CancellationToken cancellationToken = default);
+        Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
        
         Task UpdateAsync(CategoryDto categoryForUpdation, CancellationToken cancellationToken = default);
     }

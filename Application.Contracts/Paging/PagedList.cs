@@ -21,7 +21,7 @@ namespace Contracts.Paging
             AddRange(items);
         }
 
-        public static PagedList<T> CreateAsync(IEnumerable<T> source, int pageNumber,
+        public static PagedList<T> Create(IEnumerable<T> source, int pageNumber,
             int pageSize)
         {
             var count = source.Count();
