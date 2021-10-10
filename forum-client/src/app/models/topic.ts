@@ -11,6 +11,12 @@ export interface Topic{
     category: Category;
     creator: Profile;
 }
+export class Topic implements Topic{
+    constructor(init?: TopicFormValues){
+        Object.assign(this, init);
+    }
+
+}
 
 export class TopicFormValues{
     id!: string;

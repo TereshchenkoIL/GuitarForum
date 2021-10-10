@@ -10,7 +10,6 @@ export default observer( function TopicList(){
     
     const{topicsByDate} = topicStore
     useEffect(() => {
-        console.log("List");
        })
     
     return(

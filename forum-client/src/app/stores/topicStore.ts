@@ -3,6 +3,7 @@ import agent from "../api/agent";
 import Category from "../models/category";
 import { Pagination, PagingParams } from "../models/pagination";
 import { Topic, TopicFormValues } from "../models/topic";
+import { store } from "./store";
 
 export default class TopicStore{
     topicRegistry = new Map<string, Topic>();
@@ -72,7 +73,7 @@ export default class TopicStore{
         this.category = category;
     }
     get topicsByDate(){
-        return Array.from(this.topicRegistry.values()).sort((a, b) => a.createdAt!.getTime() - b.createdAt!.getTime())
+        return Array.from(this.topicRegistry.values()).sort((a, b) => b.createdAt!.getTime() - a.createdAt!.getTime())
     }
 
     loadAllTopics = async () => {
@@ -81,6 +82,7 @@ export default class TopicStore{
             this.loading = true;
             const result = await agent.Topics.list(this.axiosParams);
             result.data.forEach(topic =>{
+                topic.createdAt = new Date(topic.createdAt!)
                 this.setTopic(topic);
                 })    
           
@@ -98,6 +100,7 @@ export default class TopicStore{
             this.setLoadingInitial(true);
             const result = await agent.Topics.listByCategory(this.category!.id!,this.axiosParams);
             result.data.forEach(topic =>{
+                topic.createdAt = new Date(topic.createdAt!)
                 this.setTopic(topic);
                 })    
           
@@ -110,8 +113,6 @@ export default class TopicStore{
     }
 
     private setTopic = (topic: Topic) => {
-
-        topic.createdAt = new Date(topic.createdAt!);
         this.topicRegistry.set(topic.id, topic);
     }
 
@@ -141,6 +142,20 @@ export default class TopicStore{
     private getTopic = (id: string) =>{
         return this.topicRegistry.get(id);
     }
+    createTopic = async (topic: TopicFormValues) =>{
+        const user = store.userStore.user;
+       
+        try{
+            await agent.Topics.create(topic);
+            this.loadTopic(topic.id);
+            this.selectedTopic!.createdAt = new Date(this.selectedTopic!.createdAt!)
+            this.setTopic( this.selectedTopic!);
+        } catch(error){
+            console.log(error);
+
+           
+        }
+    }
 
     updateTopic = async (topic: TopicFormValues) => {
         try{
@@ -148,7 +163,10 @@ export default class TopicStore{
 
             runInAction(() => {
                 if(topic.id){
-                    let updatedtopic = {...this.getTopic(topic.id), ...topic}
+                    let tempTopic = this.getTopic(topic.id)
+                    let updatedtopic = {...tempTopic, ...topic}
+                    updatedtopic.createdAt = tempTopic!.createdAt!;
+             
                     this.topicRegistry.set(topic.id, updatedtopic as Topic);
                     this.selectedTopic = updatedtopic as Topic;
                 }

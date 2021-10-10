@@ -3,6 +3,7 @@ import { Button, Icon, Item, Label, Segment } from "semantic-ui-react";
 import { Topic } from "../../../app/models/topic";
 import { format } from 'date-fns'
 import { Link } from "react-router-dom";
+import { useStore } from "../../../app/stores/store";
 
 interface Props{
     topic: Topic;
@@ -10,9 +11,8 @@ interface Props{
 
 export default function TopicListItem({topic} : Props)
 {
-
+    const {topicStore} = useStore();
     useEffect(() => {
-     console.log("Item");
     })
     return (
         <Segment.Group>
@@ -39,6 +39,7 @@ export default function TopicListItem({topic} : Props)
             
             <Segment clearing>
                 <Button 
+                    onClick={() => topicStore.deleteTopic(topic.id)}
                     color='red'
                     floated='right'
                     content='Delete' />

@@ -10,11 +10,14 @@ interface Props{
 }
 export default observer(function TopicDetailHeader({topic} : Props){
 
-   
+   const{userStore} = useStore();
+    const {user} = userStore
     useEffect(() => {
         
-       console.log(topic)
-    }, [topic])
+       userStore.getUser();
+
+       console.log(userStore.user)
+    }, [userStore])
 
     return(
         <Grid centered>
@@ -35,6 +38,12 @@ export default observer(function TopicDetailHeader({topic} : Props){
                                 <Button>  <Icon color='red' name='heart' /> {topic.likes} </Button>
                                 :
                                 <Button>  <Icon color='red' name='heart outline' /> {topic.likes} </Button>
+                                }
+
+                                { topic.creator.username === userStore.user?.username ?
+                                    <Button as={Link} to={`/editTopic/${topic.id}`}  content='Edit' color='orange'/>:
+                                    user?.username
+                                    
                                 }
                                 
                             </Item.Extra>
