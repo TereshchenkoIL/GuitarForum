@@ -13,7 +13,8 @@ namespace Contracts
         public string Body { get; set; }
         
         public DateTime CreatedAt { get; set; }
-
+        
+        public bool IsLiked { get; set; }
         public int Likes { get; set; }
         
         public Category Category { get; set; }

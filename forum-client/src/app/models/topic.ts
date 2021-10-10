@@ -7,8 +7,9 @@ export interface Topic{
     createdAt: Date | null;
     body: string;
     likes: number;
+    isLiked: boolean;
     category: Category;
-    creator: Profile
+    creator: Profile;
 }
 
 export class TopicFormValues{
@@ -17,6 +18,7 @@ export class TopicFormValues{
     createdAt!: Date | null;
     body!: string;
     likes!: number;
+    isLiked!: boolean;
     category!: Category;
 
 
@@ -25,8 +27,9 @@ export class TopicFormValues{
            this.id = topic.id;
            this.title = topic.title;
            this.body = topic.body;
-           this.likes = 0;
+           this.likes = topic.likes;
            this.category = topic.category;
+           this.isLiked = topic.isLiked
         }
     }
 }

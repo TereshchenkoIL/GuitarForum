@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Button, Icon, Item, Label, Segment } from "semantic-ui-react";
 import { Topic } from "../../../app/models/topic";
 import { format } from 'date-fns'
+import { Link } from "react-router-dom";
 
 interface Props{
     topic: Topic;
@@ -21,7 +22,7 @@ export default function TopicListItem({topic} : Props)
                     <Item key={topic.id}>
                         <Item.Image style={{ marginBottom: 3 }} size='tiny' circular src={topic.creator?.image || '/assets/user.png'} />
                         <Item.Content>
-                            <Item.Header >
+                            <Item.Header as={Link} to={`/topics/${topic.id}`}>
                                 {topic.title}
                             </Item.Header>
                     
@@ -41,8 +42,10 @@ export default function TopicListItem({topic} : Props)
                     color='red'
                     floated='right'
                     content='Delete' />
-    
+
                 <Button 
+                    as={Link}
+                    to={`/topics/${topic.id}`}
                     color='teal'
                     floated='right'
                     content='View' />

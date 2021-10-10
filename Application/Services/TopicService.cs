@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Contracts;
+using Contracts.Interfaces;
 using Contracts.Paging;
 using Contracts.Services;
 using Domain.Entities;
@@ -20,11 +21,13 @@ namespace Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IUserAccessor _userAccessor;
 
-        public TopicService(IUnitOfWork unitOfWork, IMapper mapper)
+        public TopicService(IUnitOfWork unitOfWork, IMapper mapper, IUserAccessor userAccessor)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _userAccessor = userAccessor;
         }
 
         public async Task<IEnumerable<TopicDto>> GetAllByCreatorIdAsync(string creatorId, CancellationToken cancellationToken = default)
@@ -34,7 +37,12 @@ namespace Application.Services
             if (creator == null) throw new UserNotFound(creatorId);
             
             var topics = await _unitOfWork.TopicRepository.GetAllByCreatorIdAsync(creatorId,  cancellationToken);
-            return _mapper.Map<IEnumerable<TopicDto>>(topics);
+            
+            var topicsDto =_mapper.Map<IEnumerable<TopicDto>>(topics);
+
+            await SetIsLiked(cancellationToken, topicsDto, topics);
+
+            return topicsDto;
         }
 
         public async Task<IEnumerable<TopicDto>> GetAllByCreatorUsernameAsync(string username, CancellationToken cancellationToken = default)
@@ -57,8 +65,23 @@ namespace Application.Services
             var topics = await _unitOfWork.TopicRepository.GetAllByCategoryIdAsync(categoryId,  cancellationToken);
 
             var topicsDto = _mapper.Map<IEnumerable<TopicDto>>(topics);
+            
+            await SetIsLiked(cancellationToken, topicsDto, topics);
 
             return  PagedList<TopicDto>.Create(topicsDto, pagingParams.PageNumber, pagingParams.PageSize);
+        }
+
+        private async Task SetIsLiked(CancellationToken cancellationToken, IEnumerable<TopicDto> topicsDto, IEnumerable<Topic> topics)
+        {
+            var currentUser = await _unitOfWork.UserRepository.GetByUsername(_userAccessor.GetUsername(), cancellationToken);
+
+            foreach (var topic in topicsDto)
+            {
+                if (currentUser != null)
+                {
+                    topic.IsLiked = topics.First(x => x.Id == topic.Id).Likes.Any(l => l.AppUserId == currentUser.Id);
+                }
+            }
         }
 
         public async Task<TopicDto> GetByIdAsync(Guid topicId, CancellationToken cancellationToken = default)
@@ -67,7 +90,12 @@ namespace Application.Services
 
             if (topic == null) throw new TopicNotFoundException(topicId);
             
-            return _mapper.Map<TopicDto>(topic);
+            var topicDto = _mapper.Map<TopicDto>(topic);
+            var currentUser = await _unitOfWork.UserRepository.GetByUsername(_userAccessor.GetUsername(), cancellationToken);
+            if(currentUser != null)
+                topicDto.IsLiked = topic.Likes.Any(l => l.AppUserId == currentUser.Id);
+            
+            return topicDto;
         }
 
         public async Task<PagedList<TopicDto>> GetAllAsync(PagingParams pagingParams, CancellationToken cancellationToken = default)
@@ -75,6 +103,8 @@ namespace Application.Services
             var topics = await _unitOfWork.TopicRepository.GetAllAsync(cancellationToken);
 
             var topicsDto = _mapper.Map<IEnumerable<TopicDto>>(topics);
+            
+            await SetIsLiked(cancellationToken, topicsDto, topics);
 
             return PagedList<TopicDto>.Create(topicsDto, pagingParams.PageNumber, pagingParams.PageSize);
         }

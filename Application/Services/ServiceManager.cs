@@ -79,7 +79,7 @@ namespace Application.Services
             get
             {
                 if (_topicService == null)
-                    _topicService = new TopicService(_unitOfWork, _mapper);
+                    _topicService = new TopicService(_unitOfWork, _mapper, _userAccessor);
                 return _topicService;
             }
         }

@@ -96,7 +96,6 @@ export default class TopicStore{
     loadTopicsByCaetgory = async () => {
         try{
             this.setLoadingInitial(true);
-            this.loading = true;
             const result = await agent.Topics.listByCategory(this.category!.id!,this.axiosParams);
             result.data.forEach(topic =>{
                 this.setTopic(topic);
@@ -114,6 +113,27 @@ export default class TopicStore{
 
         topic.createdAt = new Date(topic.createdAt!);
         this.topicRegistry.set(topic.id, topic);
+    }
+
+    loadTopic = async (id: string) => {
+        try{
+            this.setLoadingInitial(true);
+            const topic = await agent.Topics.details(id);
+            
+            topic.createdAt = new Date(topic.createdAt!);
+
+            runInAction(() => {
+                this.selectedTopic = topic;
+            })
+    
+            this.setLoadingInitial(false);              
+        }catch(error){
+            console.log(error);
+            this.setLoadingInitial(false);  
+        }
+    }
+    clearSelectedTopic = () => {
+        this.selectedTopic = null;
     }
 
 
