@@ -1,11 +1,12 @@
 import { formatDistanceToNow } from "date-fns";
-import { Formik, Field, FieldProps } from "formik";
+import { Formik, Field, FieldProps, useFormikContext } from "formik";
 import { observer } from "mobx-react-lite";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Form, Header, Loader, Segment, Comment } from "semantic-ui-react";
+import { Form, Header, Loader, Segment, Comment, Grid, Button } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import * as Yup from 'yup'
+import { ChatComment } from "../../../app/models/comment";
 
 interface Props{
     topicId: string;
@@ -13,13 +14,28 @@ interface Props{
 
 export default observer(function TopicDetailChat({topicId}: Props){
     const {commentStore} = useStore();
+    const{editMode, selectedComment, setEditMode, setSelectedComment} = commentStore;
+
+
+
+
+    function handleEditClick(comment: ChatComment){
+        setEditMode(true);
+        alert('Type new comment')
+        setSelectedComment(comment)
+    }
 
     useEffect(() => {
         if (topicId) {
             commentStore.createHubConnection(topicId)
         }
    
+        return () => {
+            commentStore.clearComments();
+        }
     }, [commentStore, topicId])
+
+  
 
     return(
 
@@ -37,7 +53,14 @@ export default observer(function TopicDetailChat({topicId}: Props){
             </Segment>
             <Segment attached clearing>
                     <Formik
-                        onSubmit={(values, { resetForm }) => commentStore.addComent(values).then(() => resetForm())}
+                        onSubmit={(values, { resetForm }) =>{
+                            if(!editMode)
+                                commentStore.addComent(values).then(() => resetForm())
+                            else{
+                                setEditMode(false);
+                                commentStore.updateComment(values).then(() => resetForm())
+                            }
+                        }}
                         initialValues={{ body: '' }}
                         validationSchema={Yup.object({
                             body: Yup.string().required()
@@ -54,6 +77,7 @@ export default observer(function TopicDetailChat({topicId}: Props){
                                                 rows={2}
                                                 {...props.field}
                                                 onKeyPress={e => {
+                                                  
                                                     if (e.key === 'Enter' && e.shiftKey)
                                                         return;
                                                     if (e.key === 'Enter' && !e.shiftKey) {
@@ -72,21 +96,32 @@ export default observer(function TopicDetailChat({topicId}: Props){
                     <Comment.Group>
                         {
                         Array.from(commentStore.comments.values()).sort((a, b) => b.createdAt!.getTime() - a.createdAt!.getTime()).map(comment => (
-                            <Comment key={comment.id}>
-                                <Comment.Avatar src={comment.image || '/assets/user.png'} />
-                                <Comment.Content>
-                                    <Comment.Author as={Link} to={`/profiles/${comment.username}`}>
-                                        {comment.displayName}
-                                    </Comment.Author>
-                                    <Comment.Metadata>
-                                        <div>{formatDistanceToNow(comment.createdAt) + ' ago'}</div>
-                                    </Comment.Metadata>
-                                    <Comment.Text style={{ whiteSpace: 'pre-wrap' }}>{comment.body}</Comment.Text>
-                                    <Comment.Actions>
-                                        <Comment.Action>Reply</Comment.Action>
-                                    </Comment.Actions>
-                                </Comment.Content>
-                            </Comment>
+                        <Grid key={comment.id}>
+                            <Grid.Column floated='left' width={5}>
+                                <Comment key={comment.id}>
+                                    <Comment.Avatar src={comment.image || '/assets/user.png'} />
+                                    <Comment.Content>
+                                        <Comment.Author as={Link} to={`/profiles/${comment.username}`}>
+                                            {comment.displayName}
+                                        </Comment.Author>
+                                        <Comment.Metadata>
+                                            <div>{formatDistanceToNow(comment.createdAt) + ' ago'}</div>
+                                            
+                                        </Comment.Metadata>
+                                        <Comment.Text style={{ whiteSpace: 'pre-wrap' }}>{comment.body}</Comment.Text>
+                                    </Comment.Content>
+                                </Comment>
+                            </Grid.Column>
+                            <Grid.Column floated='right' width={5}  >
+                                <div >
+                                    <Button onClick={() => commentStore.deleteComment(comment.id)} basic icon='trash alternate outline' color='red'/>
+                                    <Button onClick={() =>  handleEditClick(comment)} basic icon='pencil alternate' color='orange'/>
+                                  
+                                </div>
+                            </Grid.Column>
+                        </Grid>
+                           
+                         
                         ))}
 
 

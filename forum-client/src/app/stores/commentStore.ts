@@ -37,7 +37,7 @@ export default class CommentStore{
                 runInAction(() => {  
                    alert('LoadComments');
                     comments.forEach(comment => {
-                        comment.createdAt = new Date(comment.createdAt);
+                        comment.createdAt = new Date(comment.createdAt + 'Z');
                         this.setComment(comment);
                     })
                 })
@@ -53,7 +53,7 @@ export default class CommentStore{
                    
                 })
             })
-            this.hubConnection.on('UpdateComment', (comment: CommentUpdateDto) => {
+            this.hubConnection.on('UpdateComment', (comment: ChatComment) => {
                 
                 runInAction(() => {
                     let commentFromRegistry = this.comments.get(comment.id)
@@ -76,11 +76,13 @@ export default class CommentStore{
         }
     }
 
-
+    stopHubConnection = () => {
+        this.hubConnection?.stop().catch(error => console.log("Error stopping connection: ", error));
+    }
 
     clearComments = () =>{
         this.comments = new Map<string, ChatComment>();
-       // this.stopHubConnection();
+        this.stopHubConnection();
     }
 
     addComent = async (values: any) => {
@@ -92,5 +94,33 @@ export default class CommentStore{
         } catch(error) {
             console.log(error);
         }
+    }
+
+    updateComment = async (values: any) => {
+
+        values.topicId = store.topicStore.selectedTopic?.id;
+        values.username = store.userStore.user?.username;
+        values.id = this.selectedComment?.id;
+
+        try{
+            await this.hubConnection?.invoke('UpdateComment', values);
+        } catch(error) {
+            console.log(error);
+        }
+    }
+
+    deleteComment = async(id: string) => {
+        try{
+            await this.hubConnection?.invoke('DeleteComment', id);
+        }catch(error){
+            console.log(error);
+        }
+    }
+
+    setEditMode = (state: boolean) =>{
+        this.editMode = state;
+    } 
+    setSelectedComment = (comment: ChatComment) => {
+        this.selectedComment = comment;
     }
 }

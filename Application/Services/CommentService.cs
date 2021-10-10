@@ -78,7 +78,8 @@ namespace Application.Services
 
         public async Task DeleteAsync(Guid commentId, CancellationToken cancellationToken = default)
         {
-            _unitOfWork.CommentRepository.Delete(new Comment{Id = commentId});
+            var comment = await _unitOfWork.CommentRepository.GetByIdAsync(commentId);
+            _unitOfWork.CommentRepository.Delete(comment);
 
             var result = await  _unitOfWork.SaveChangesAsync(cancellationToken);
 

@@ -32,15 +32,16 @@ namespace API.SignalR
 
              var comment = await _serviceManager.CommentService.GetByIdAsync(commentDto.Id);
 
-             await Clients.Group(commentDto.Id.ToString()).SendAsync("UpdateComment", comment);
+             await Clients.Group(commentDto.TopicId.ToString()).SendAsync("UpdateComment", comment);
         }
         
         public async Task DeleteComment(Guid id)
         {
             var comment = await _serviceManager.CommentService.GetByIdAsync(id);
             await _serviceManager.CommentService.DeleteAsync(id);
-
-            await Clients.Group(comment.Id.ToString()).SendAsync("DeleteComment", id);
+            var httpContext = Context.GetHttpContext();
+            var topicId = httpContext.Request.Query["topicId"];
+            await Clients.Group(topicId).SendAsync("DeleteComment", id);
         }
         public override async Task OnConnectedAsync()
         {
