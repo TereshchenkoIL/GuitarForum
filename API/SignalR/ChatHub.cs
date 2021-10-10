@@ -16,11 +16,14 @@ namespace API.SignalR
             _serviceManager = serviceManager;
         }
 
+   
         public async Task SendComment(CommentCreateDto commentDto)
         {
             var comment = await _serviceManager.CommentService.CreateAsync(commentDto);
 
-            await Clients.Group(commentDto.Id.ToString()).SendAsync("ReceiveComment", comment);
+
+            await Clients.Group(commentDto.TopicId.ToString())
+                .SendAsync("ReceiveComment", comment);
         }
 
         public async Task UpdateComment(CommentUpdateDto commentDto)
@@ -39,20 +42,18 @@ namespace API.SignalR
 
             await Clients.Group(comment.Id.ToString()).SendAsync("DeleteComment", id);
         }
-
         public override async Task OnConnectedAsync()
         {
             var httpContext = Context.GetHttpContext();
-
             var topicId = httpContext.Request.Query["topicId"];
 
             await Groups.AddToGroupAsync(Context.ConnectionId, topicId);
-
+            
             var comments = await _serviceManager.CommentService.GetAllByTopicAsync(Guid.Parse(topicId));
 
             await Clients.Caller.SendAsync("LoadComments", comments);
-
-
         }
+
+     
     }
 }

@@ -21,7 +21,7 @@ namespace Contracts.Services
 
        Task CreateAsync(TopicDto topicForCreation, CancellationToken cancellationToken = default);
        
-       Task DeleteAsync(TopicDto topicForDeletion, CancellationToken cancellationToken = default);
+       Task DeleteAsync(Guid topicId, CancellationToken cancellationToken = default);
        
        Task UpdateAsync(TopicDto topicForUpdation, CancellationToken cancellationToken = default);
        

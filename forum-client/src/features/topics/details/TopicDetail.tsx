@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { useStore } from "../../../app/stores/store";
+import TopicDetailChat from "./TopicDetailChat";
 import TopicDetailHeader from "./TopicDetailHeader";
 
 export default observer( function TopicDetail(){
@@ -19,7 +20,10 @@ export default observer( function TopicDetail(){
     
     if(!topic) return <LoadingComponent content='Loading...' />
     return(
-        <TopicDetailHeader topic={topic!} />
+        <>
+            <TopicDetailHeader topic={topic!} />
+            <TopicDetailChat topicId={topic!.id} />
+        </>
     );
 }
 )

@@ -62,14 +62,14 @@ namespace API.Controllers
         [HttpPut]
         public async Task<IActionResult> EditTopic(TopicDto topicDto)
         {
-            await ServiceManager.TopicService.CreateAsync(topicDto);
+            await ServiceManager.TopicService.UpdateAsync(topicDto);
             return Ok();
         }
         
-        [HttpDelete]
-        public async Task<IActionResult> DeleteTopic(TopicDto topicDto)
+        [HttpDelete("{topicId}")]
+        public async Task<IActionResult> DeleteTopic(Guid topicId)
         {
-            await ServiceManager.TopicService.DeleteAsync(topicDto);
+            await ServiceManager.TopicService.DeleteAsync(topicId);
             return Ok();
         }
 

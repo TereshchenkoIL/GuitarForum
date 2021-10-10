@@ -59,10 +59,14 @@ namespace Application.Services
         {
             var comment = _mapper.Map<Comment>(commentForCreation);
 
-            var username = _userAccessor.GetUsername();
+            
 
-            var user = await _unitOfWork.UserRepository.GetByUsername(username, cancellationToken);
-            comment.Author = user;
+            var user = await _unitOfWork.UserRepository.GetByUsername(commentForCreation.Username, cancellationToken);
+           
+            var topic = await _unitOfWork.TopicRepository.GetByIdAsync(commentForCreation.TopicId, cancellationToken);
+            if (topic == null) throw new TopicNotFoundException(commentForCreation.TopicId);
+             comment.Author = user;
+             comment.Topic = topic;
             _unitOfWork.CommentRepository.Create(comment);
 
             var result = await  _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -83,7 +87,11 @@ namespace Application.Services
 
         public async Task UpdateAsync(CommentUpdateDto commentForUpdation, CancellationToken cancellationToken = default)
         {
-            _unitOfWork.CommentRepository.Update(_mapper.Map<Comment>(commentForUpdation));
+            var comment = await _unitOfWork.CommentRepository.GetByIdAsync(commentForUpdation.Id, cancellationToken);
+
+            if (comment == null) throw new CommentNotFoundException("unknown", commentForUpdation.Body);
+
+            _mapper.Map(commentForUpdation, comment);
 
             var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
 

@@ -24,6 +24,7 @@ namespace Persistence.Repositories
                     .ThenInclude(x => x.Topics)
                     .Include(x => x.Likes)
                     .Where(expression)
+                    .OrderByDescending(x => x.CreatedAt)
                     .ToListAsync(cancellationToken: cancellationToken);
         }
 
@@ -34,6 +35,7 @@ namespace Persistence.Repositories
                     .Include(x => x.Creator)
                     .ThenInclude(x => x.Topics)
                     .Include(x => x.Likes)
+                    .OrderByDescending(x => x.CreatedAt)
                     .ToListAsync(cancellationToken: cancellationToken);
         }
 

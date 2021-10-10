@@ -23,7 +23,9 @@ namespace Application.Mapping
 
             CreateMap<Topic, TopicDto>()
                 .ForMember(d => d.Likes, o => o.MapFrom(t => t.Likes.Count));
-            
+            CreateMap<TopicDto, Topic>()
+                .ForMember(d => d.Likes, o=> o.Ignore());
+
             CreateMap<Topic, UserTopicDto>()
                 .ForMember(d => d.CreatorUsername, o => o.MapFrom(t => t.Creator.UserName))
                 .ForMember(d => d.TopicId, o => o.MapFrom(s => s.Id))

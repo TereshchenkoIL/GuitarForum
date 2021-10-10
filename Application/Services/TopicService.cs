@@ -101,6 +101,7 @@ namespace Application.Services
         public async Task<PagedList<TopicDto>> GetAllAsync(PagingParams pagingParams, CancellationToken cancellationToken = default)
         {
             var topics = await _unitOfWork.TopicRepository.GetAllAsync(cancellationToken);
+            
 
             var topicsDto = _mapper.Map<IEnumerable<TopicDto>>(topics);
             
@@ -111,16 +112,25 @@ namespace Application.Services
 
         public async Task CreateAsync(TopicDto topicForCreation, CancellationToken cancellationToken = default)
         {
-           _unitOfWork.TopicRepository.Create(entity: _mapper.Map<Topic>(topicForCreation));
+            var user = await _unitOfWork.UserRepository.GetByUsername(_userAccessor.GetUsername(), cancellationToken);
+            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(topicForCreation.Category.Id,cancellationToken);
+            var topic = _mapper.Map<Topic>(topicForCreation);
+            topic.Creator = user;
+            topic.CreatedAt = DateTime.UtcNow;
+            topic.Category = category;
+           _unitOfWork.TopicRepository.Create(topic);
 
            var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
 
            if (!result) throw new TopicCreateException("Failed to create topic");
         }
 
-        public async Task DeleteAsync(TopicDto topicForDeletion, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(Guid topicId, CancellationToken cancellationToken = default)
         {
-            _unitOfWork.TopicRepository.Delete(entity: _mapper.Map<Topic>(topicForDeletion));
+            var topic = await _unitOfWork.TopicRepository.GetByIdAsync(topicId);
+
+            if (topic == null) throw new TopicNotFoundException(topicId);
+             _unitOfWork.TopicRepository.Delete(topic);
 
             var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -129,7 +139,14 @@ namespace Application.Services
 
         public async Task UpdateAsync(TopicDto topicForUpdation, CancellationToken cancellationToken = default)
         {
-            _unitOfWork.TopicRepository.Create(entity: _mapper.Map<Topic>(topicForUpdation));
+            var topic = await _unitOfWork.TopicRepository.GetByIdAsync(topicForUpdation.Id, cancellationToken);
+
+            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(topicForUpdation.Category.Id);
+            topic.Body = topicForUpdation.Body;
+            topic.Title = topicForUpdation.Title;
+            topic.Category = category;
+            
+            
 
             var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
 

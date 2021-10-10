@@ -8,7 +8,6 @@ import { store } from "./store";
 export default class TopicStore{
     topicRegistry = new Map<string, Topic>();
     selectedTopic: Topic | null = null;
-    editMode = false;
     loading = false;
     loadingInitial = true;
     pagination: Pagination | null = null;

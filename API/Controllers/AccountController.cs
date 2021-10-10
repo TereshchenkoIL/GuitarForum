@@ -31,8 +31,18 @@ namespace API.Controllers
                 x.Email == HttpContext.User.FindFirstValue(ClaimTypes.Email));
 
             if (user == null) return Unauthorized();
+            var roles = await _userManager.GetRolesAsync(user);
 
-            return Ok(user);
+            var isAdmin = roles.Contains("Admin");
+            return Ok(new UserDto
+            {
+                DisplayName = user.DisplayName,
+                Image = user.Photo?.Url,
+                Token = await _tokenService.CreateToken(user),
+                isAdmin = isAdmin,
+                Username = user.UserName
+            });
+           
         }
 
         [HttpPost("login")]
