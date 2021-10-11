@@ -8,5 +8,9 @@ namespace Domain.Exceptions.LikeExceptions
             : base($"The ${topicTtitle} topic doesn't have like from ${displayName}")
         {
         }
+        public LikeNotFoundException(string message) 
+            : base(message)
+        {
+        }
     }
 }

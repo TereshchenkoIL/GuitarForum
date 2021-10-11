@@ -25,6 +25,7 @@ export default function TopicListItem({topic} : Props)
                             <Item.Header as={Link} to={`/topics/${topic.id}`}>
                                 {topic.title}
                             </Item.Header>
+                            <Item.Description>Created by <Link to={`/profiles/${topic.creator.username}`}> {topic.creator.displayName}</Link></Item.Description>
                     
                         </Item.Content>
                     </Item>

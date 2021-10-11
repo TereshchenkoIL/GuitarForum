@@ -5,7 +5,8 @@ export interface Profile {
     displayName: string;
     image?:string;
     bio: string;
-    photos: Photo
+    photo: Photo;
+    topicsCount: number;
 }
 
 export class Profile implements Profile{

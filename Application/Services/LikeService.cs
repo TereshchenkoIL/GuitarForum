@@ -84,6 +84,8 @@ namespace Application.Services
 
         public async Task DeleteAsync(LikeDto likeForDeletion, CancellationToken cancellationToken = default)
         {
+            var like = await _unitOfWork.LikeRepository.GetLike(likeForDeletion.AppUserId, likeForDeletion.TopicId, cancellationToken); 
+            if(like == null) throw new LikeNotFoundException("Like not found, Filed to delete like");
             _unitOfWork.LikeRepository.Delete(_mapper.Map<Like>(likeForDeletion));
 
             var result = await _unitOfWork.SaveChangesAsync(cancellationToken);

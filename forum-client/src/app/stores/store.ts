@@ -2,6 +2,7 @@ import { createContext, useContext } from "react";
 import CategoryStore from "./categoryStore";
 import CommentStore from "./commentStore";
 import ModalStore from "./modalStore";
+import ProfileStore from "./profileStore";
 import TopicStore from "./topicStore";
 import UserStore from "./userStore";
 
@@ -10,7 +11,8 @@ interface Store{
     categoryStore: CategoryStore,
     modalStore: ModalStore,
     userStore: UserStore,
-    commentStore: CommentStore
+    commentStore: CommentStore,
+    profileStore: ProfileStore
 }
 
 
@@ -19,7 +21,8 @@ export const store: Store = {
     categoryStore: new CategoryStore(),
     modalStore: new ModalStore(),
     userStore: new UserStore(),
-    commentStore: new CommentStore()
+    commentStore: new CommentStore(),
+    profileStore: new ProfileStore()
 }
 
 export const StoreContext = createContext(store);

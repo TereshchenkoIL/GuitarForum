@@ -1,6 +1,7 @@
 import axios, {AxiosResponse} from "axios";
 import Category from "../models/category";
 import { PaginatedResult } from "../models/pagination";
+import { Profile } from "../models/profile";
 import { Topic, TopicFormValues } from "../models/topic";
 import { User, UserFormValues } from "../models/user";
 import { store } from "../stores/store";
@@ -62,11 +63,16 @@ const Account = {
     register: (user: UserFormValues) => requests.post<User>('/account/register',user)
 }
 
+const Profiles = {
+    get: (username: string) => requests.get<Profile>(`/Profiles/${username}`)
+}
+
 
 const agent = {
     Topics,
     Categories,
-    Account
+    Account,
+    Profiles
 };
 
 export default agent;

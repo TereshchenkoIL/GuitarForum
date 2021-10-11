@@ -16,6 +16,7 @@ namespace Persistence.Repositories
         {
             return await Context.Users
                     .Include(p => p.Photo)
+                    .Include(t => t.Topics)
                     .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken: cancellationToken);
         }
 
@@ -23,6 +24,7 @@ namespace Persistence.Repositories
         {
             return  await Context.Users
                     .Include(p => p.Photo)
+                    .Include(t => t.Topics)
                     .FirstOrDefaultAsync(u => u.UserName == username, cancellationToken: cancellationToken);
         }
     }

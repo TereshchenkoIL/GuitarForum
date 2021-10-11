@@ -15,7 +15,7 @@ namespace API.Controllers
             _userManager = userManager;
         }
 
-        [HttpGet("username")]
+        [HttpGet("{username}")]
         public async Task<IActionResult> GetProfile(string username)
         {
             var profile = await ServiceManager.ProfileService.GetDetails(username);
