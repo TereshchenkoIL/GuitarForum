@@ -15,9 +15,9 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromForm] IFormFile file)
         {
-            await ServiceManager.PhotoService.CreateAsync(file);
+            var photo = await ServiceManager.PhotoService.CreateAsync(file);
 
-            return Ok();
+            return Ok(photo);
         }
         
         [HttpDelete("{id}")]

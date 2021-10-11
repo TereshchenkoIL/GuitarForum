@@ -47,13 +47,13 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<PhotoDto>>(photos);
         }
 
-        public async Task CreateAsync(IFormFile file, CancellationToken cancellationToken = default)
+        public async  Task<PhotoDto> CreateAsync(IFormFile file, CancellationToken cancellationToken = default)
         {
             string username = _userAccessor.GetUsername();
 
             var user = await _unitOfWork.UserRepository.GetByUsername(username,  cancellationToken);
             if (user == null) throw new UserNotFound(username);
-
+            await DeleteAsync(user.Photo.Id, cancellationToken);
             var photoResult = await _photoAccessor.AddPhoto(file);
 
             var photoForCreation = new Photo
@@ -66,11 +66,15 @@ namespace Application.Services
             var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             if (!result) throw new PhotoCreateException("Failed to add the photo");
+
+            return _mapper.Map<PhotoDto>(photoForCreation);
+            
         }
 
         public async Task DeleteAsync(string id, CancellationToken cancellationToken = default)
         {
-            _unitOfWork.PhotoRepository.Delete(new Photo{Id = id});
+            
+            _unitOfWork.PhotoRepository.Delete(await _unitOfWork.PhotoRepository.GetById(id, cancellationToken));
             
             var cloudinaryResult = await _photoAccessor.DeletePhoto(id);
             

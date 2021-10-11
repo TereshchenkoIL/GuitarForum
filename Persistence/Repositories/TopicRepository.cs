@@ -22,6 +22,8 @@ namespace Persistence.Repositories
                     .Include(x => x.Category)
                     .Include(x => x.Creator)
                     .ThenInclude(x => x.Topics)
+                    .Include(x => x.Creator)
+                    .ThenInclude(x => x.Photo)
                     .Include(x => x.Likes)
                     .Where(expression)
                     .OrderByDescending(x => x.CreatedAt)
@@ -34,6 +36,8 @@ namespace Persistence.Repositories
                     .Include(x => x.Category)
                     .Include(x => x.Creator)
                     .ThenInclude(x => x.Topics)
+                    .Include(x => x.Creator)
+                    .ThenInclude(x => x.Photo)
                     .Include(x => x.Likes)
                     .OrderByDescending(x => x.CreatedAt)
                     .ToListAsync(cancellationToken: cancellationToken);
@@ -55,6 +59,8 @@ namespace Persistence.Repositories
                     .Include(x => x.Category)
                     .Include(x => x.Creator)
                     .ThenInclude(x => x.Topics)
+                    .Include(x => x.Creator)
+                    .ThenInclude(x => x.Photo)
                     .Include(x => x.Likes)
                     .FirstOrDefaultAsync(x => x.Id == topicId, cancellationToken: cancellationToken);
         }

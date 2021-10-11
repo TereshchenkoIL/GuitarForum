@@ -12,7 +12,7 @@ namespace Contracts.Services
         
         Task<IEnumerable<PhotoDto>> GetAllAsync( CancellationToken cancellationToken = default);
 
-        Task CreateAsync(IFormFile file, CancellationToken cancellationToken = default);
+        Task<PhotoDto> CreateAsync(IFormFile file, CancellationToken cancellationToken = default);
        
         Task DeleteAsync(string Id, CancellationToken cancellationToken = default);
        

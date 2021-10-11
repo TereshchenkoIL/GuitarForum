@@ -19,6 +19,7 @@ namespace Persistence.Repositories
         {
             return await Context.Comments
                     .Include(x => x.Author)
+                    .ThenInclude(p => p.Photo)
                     .Include(t => t.Topic)
                     .FirstOrDefaultAsync(x => x.Id == commentId, cancellationToken: cancellationToken);
         }
@@ -28,6 +29,7 @@ namespace Persistence.Repositories
         {
             return  await Context.Comments
                     .Include(x => x.Author)
+                    .ThenInclude(p => p.Photo)
                     .Include(t => t.Topic)
                     .Where(x => x.Topic.Id == topicId)
                     .ToListAsync(cancellationToken: cancellationToken);

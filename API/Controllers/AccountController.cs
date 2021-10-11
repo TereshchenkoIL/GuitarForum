@@ -17,6 +17,7 @@ namespace API.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly TokenService _tokenService;
+        
         public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, TokenService tokenService)
         {
             _userManager = userManager;
@@ -27,7 +28,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<IActionResult> Current()
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => 
+            var user = await _userManager.Users.Include(x => x.Photo).FirstOrDefaultAsync(x => 
                 x.Email == HttpContext.User.FindFirstValue(ClaimTypes.Email));
 
             if (user == null) return Unauthorized();
