@@ -74,7 +74,7 @@ namespace API.Controllers
         }
         
         [HttpPost("register")]
-        public async Task<ActionResult<UserDto>> Login(RegisterDto registerDto)
+        public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
             var user = await _userManager.FindByEmailAsync(registerDto.Email);
 
@@ -96,7 +96,8 @@ namespace API.Controllers
             {
                 DisplayName = registerDto.DisplayName,
                 Email = registerDto.Email,
-                UserName = registerDto.Username
+                UserName = registerDto.Username,
+                Bio = registerDto.Bio
             };
 
 

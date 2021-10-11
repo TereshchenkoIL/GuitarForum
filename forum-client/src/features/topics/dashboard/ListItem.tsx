@@ -11,7 +11,7 @@ interface Props{
 
 export default function TopicListItem({topic} : Props)
 {
-    const {topicStore} = useStore();
+    const {topicStore, userStore:{isAdmin, user}} = useStore();
     useEffect(() => {
     })
     return (
@@ -39,11 +39,15 @@ export default function TopicListItem({topic} : Props)
             </Segment>
             
             <Segment clearing>
-                <Button 
+
+                {(topic.creator.username === user!.username || isAdmin) && (
+                    <Button 
                     onClick={() => topicStore.deleteTopic(topic.id)}
                     color='red'
                     floated='right'
                     content='Delete' />
+                )}
+                
 
                 <Button 
                     as={Link}

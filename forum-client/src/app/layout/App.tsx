@@ -7,20 +7,31 @@ import TopicDashboard from '../../features/topics/dashboard/TopicDashboard';
 import TopicDetail from '../../features/topics/details/TopicDetail';
 import TopicForm from '../../features/topics/form/TopicForm';
 import LoginForm from '../../features/users/LoginForm';
+import RegisterForm from '../../features/users/RegisterForm';
+import AuthorizedRoute from '../common/Routes/AuthorizedRoute';
 import './App.css';
 import Navbar from './Navbar';
 
 function App() {
   return (
     <>
-      <Navbar />
+      
       <Container style={{ marginTop: '7em' }}>
-        <Route path='/' exact component={LoginForm} /> 
-        <Route path='/topics' exact component={TopicDashboard} /> 
-        <Route path='/createTopic' exact component={TopicForm} /> 
-        <Route path='/editTopic/:id' exact component={TopicForm} /> 
-        <Route path='/topics/:id' exact component={TopicDetail} /> 
-        <Route path='/profiles/:username' exact component={ProfilePage} />
+        <Route path='/' exact component={HomePage} /> 
+        <Route path='/login' exact component={LoginForm}/>
+        <Route path='/register' exact component={RegisterForm}/>
+        <Route path={'/(.+)'}
+        render={() => (
+          <>
+            <Navbar />
+            <AuthorizedRoute path='/topics' exact component={TopicDashboard} /> 
+           
+            <AuthorizedRoute path='/createTopic' exact component={TopicForm} /> 
+            <AuthorizedRoute path='/editTopic/:id' exact component={TopicForm} /> 
+            <AuthorizedRoute path='/topics/:id' exact component={TopicDetail} /> 
+            <AuthorizedRoute path='/profiles/:username' exact component={ProfilePage} />
+          </>
+        )}/>
       </Container>
     </>
   );

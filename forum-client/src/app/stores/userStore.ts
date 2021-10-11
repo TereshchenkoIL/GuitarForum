@@ -22,6 +22,10 @@ export default class UserStore{
     get isLoggedIn(){
         return !!this.user;
     }
+
+    get isAdmin(){
+        return this.user?.isAdmin;
+    }
     setToken = (token: string|null) =>{
         if(token) window.localStorage.setItem('jwt', token);
         this.token = token;
@@ -64,11 +68,14 @@ export default class UserStore{
             this.setToken(user.token)
             runInAction(() => {
                 this.user = user;
-            })
-            store.modalStore.closeModal();
+            }) 
+            
+          
         }catch(error){
             throw error;
         }
+
+      
     }
 
     setImage = (image: string) => {

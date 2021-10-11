@@ -6,10 +6,13 @@ import App from './app/layout/App';
 import reportWebVitals from './reportWebVitals';
 import { store, StoreContext } from './app/stores/store';
 import { BrowserRouter } from 'react-router-dom';
+import { createBrowserHistory } from 'history'
+import 'react-datepicker/dist/react-datepicker.css'
 
+export const history = createBrowserHistory();
 ReactDOM.render(
   <StoreContext.Provider value={store}>
-    <BrowserRouter>
+    <BrowserRouter >
         <App />
     </BrowserRouter> 
   </StoreContext.Provider>,

@@ -1,11 +1,11 @@
-import axios, {AxiosResponse} from "axios";
+import axios, {AxiosError, AxiosResponse} from "axios";
 import Category from "../models/category";
 import { PaginatedResult } from "../models/pagination";
-import { Photo, Profile } from "../models/profile";
+import { Photo, Profile, ProfileUpdateData } from "../models/profile";
 import { Topic, TopicFormValues } from "../models/topic";
 import { User, UserFormValues } from "../models/user";
 import { store } from "../stores/store";
-
+import {history} from '../..'
 
 axios.defaults.baseURL = 'http://localhost:5000/api'
 
@@ -25,7 +25,29 @@ axios.interceptors.response.use(async response => {
         return response as AxiosResponse<PaginatedResult<any>>
     }
     return response;
-})
+},(error: AxiosError) => {
+    const {data, status, config} = error.response!;
+    switch(status){
+        case 400:
+
+            if(config.method === 'get' && data.errors.hasOwnProperty('id')){
+                history.push('/not-found')
+            }
+            if(data.errors){
+                const modelStateErrors = [];
+
+                for( const key in data.errors){
+                    if(data.errors[key]){
+                        modelStateErrors.push(data.errors[key]);
+                    }
+                }
+                throw modelStateErrors.flat();
+            }
+            
+            break;
+        }
+        return Promise.reject(error);
+    })
 
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
@@ -45,7 +67,7 @@ const Topics = {
     create: (topic: TopicFormValues) => requests.post('/Topics', topic),
     update: (topic: TopicFormValues) => requests.put(`/Topics`, topic),
     delete: (id: string) => requests.del<void>(`/Topics/${id}`),
-    like: (id: string) => requests.post(`${id}/like`, {})
+    like: (id: string) => requests.post(`/Topics/${id}/like`, {})
 
 }
 
@@ -71,7 +93,9 @@ const Profiles = {
         return axios.post<Photo>('/photos', formData,{
             headers: {'Content-type': 'multipart/form-data'}
         })
-    }
+    },
+    updateProfile: (data: ProfileUpdateData) => requests.put<Profile>(`/profiles`,data),
+    getTopics: (username: string) => requests.get<Topic[]>(`profiles/${username}/topics`)
 }
 
 

@@ -12,8 +12,8 @@ namespace Domain.Entities
         public string DisplayName { get; set; }
         [Required]
         public string Bio { get; set; }
-        [Required]
-        public DateTime JoinData { get; set; }
+
+        [Required] public DateTime JoinData { get; set; } = DateTime.UtcNow;
         
         public Photo Photo { get; set; }
         

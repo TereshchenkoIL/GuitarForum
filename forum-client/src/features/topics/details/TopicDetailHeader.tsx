@@ -10,8 +10,8 @@ interface Props{
 }
 export default observer(function TopicDetailHeader({topic} : Props){
 
-   const{userStore} = useStore();
-    const {user} = userStore
+   const{userStore, topicStore:{likeTopic, loading}} = useStore();
+    const {user, isAdmin} = userStore
     useEffect(() => {
         
        userStore.getUser();
@@ -35,12 +35,12 @@ export default observer(function TopicDetailHeader({topic} : Props){
 
                             <Item.Extra>
                                 {topic.isLiked ? 
-                                <Button>  <Icon color='red' name='heart' /> {topic.likes} </Button>
+                                <Button disabled={loading} onClick={() => likeTopic(topic.id)}>  <Icon color='red' name='heart' /> {topic.likes} </Button>
                                 :
-                                <Button>  <Icon color='red' name='heart outline' /> {topic.likes} </Button>
+                                <Button disabled={loading} onClick={() => likeTopic(topic.id)}>  <Icon color='red' name='heart outline' /> {topic.likes} </Button>
                                 }
 
-                                { topic.creator.username === userStore.user?.username ?
+                                { (topic.creator.username === userStore.user!.username || isAdmin)?
                                     <Button as={Link} to={`/editTopic/${topic.id}`}  content='Edit' color='orange'/>:
                                     user?.username
                                     

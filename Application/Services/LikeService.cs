@@ -54,43 +54,40 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<LikeDto>>(likes);
         }
 
-        public async Task CreateAsync(LikeDto likeForCreation, CancellationToken cancellationToken = default)
-        {
-            _unitOfWork.LikeRepository.Create(_mapper.Map<Like>(likeForCreation));
+     
 
-            var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            if (!result) throw new LikeCreateException("Failed to create like");
-        }
-
-        public async Task CreateAsync(Guid topicId, CancellationToken cancellationToken = default)
+        public async Task ToggleLikeAsync(Guid topicId, CancellationToken cancellationToken = default)
         {
             var username = _userAccessor.GetUsername();
             var user = await _unitOfWork.UserRepository.GetByUsername(username,  cancellationToken);
             if (user == null) throw new UserNotFound(username);
 
-            var topic = _unitOfWork.TopicRepository.GetByIdAsync(topicId,  cancellationToken);
+            var topic = await _unitOfWork.TopicRepository.GetByIdAsync(topicId,  cancellationToken);
 
             if (topic == null) throw new TopicNotFoundException(topicId);
 
-            var like = new LikeDto
+            var like = await _unitOfWork.LikeRepository.GetLike(user.Id, topicId, cancellationToken);
+
+            if (like == null)
             {
-                AppUserId = user.Id,
-                TopicId = topicId
-            };
+                like = new Like
+                {
+                    AppUser = user,
+                    Topic = topic
+                };
+                _unitOfWork.LikeRepository.Create(like);
+            }
+            else
+            {
+                _unitOfWork.LikeRepository.Delete(like);
+            }
 
-            await CreateAsync(like, cancellationToken);
-        }
-
-        public async Task DeleteAsync(LikeDto likeForDeletion, CancellationToken cancellationToken = default)
-        {
-            var like = await _unitOfWork.LikeRepository.GetLike(likeForDeletion.AppUserId, likeForDeletion.TopicId, cancellationToken); 
-            if(like == null) throw new LikeNotFoundException("Like not found, Filed to delete like");
-            _unitOfWork.LikeRepository.Delete(_mapper.Map<Like>(likeForDeletion));
 
             var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            if (!result) throw new LikeDeleteException("Failed to create like");
+            if (!result) throw new LikeCreateException("Failed to add like");
         }
+
+       
     }
 }

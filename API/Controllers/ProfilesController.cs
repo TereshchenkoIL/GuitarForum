@@ -26,9 +26,9 @@ namespace API.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateProfile(UserUpdateDto userUpdateDto)
         {
-            await ServiceManager.ProfileService.UpdateAsync(userUpdateDto.DisplayName, userUpdateDto.Bio);
+            var profile = await ServiceManager.ProfileService.UpdateAsync(userUpdateDto.DisplayName, userUpdateDto.Bio);
 
-            return Ok();
+            return Ok(profile);
         }
 
         [HttpGet("{username}/topics")]

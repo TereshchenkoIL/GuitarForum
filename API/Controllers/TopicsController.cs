@@ -76,7 +76,7 @@ namespace API.Controllers
         [HttpPost("{topicId}/like")]
         public async Task<IActionResult> Like(Guid topicId)
         {
-            await ServiceManager.LikeService.CreateAsync(topicId);
+            await ServiceManager.LikeService.ToggleLikeAsync(topicId);
 
             return Ok();
         }

@@ -78,7 +78,6 @@ export default class TopicStore{
     loadAllTopics = async () => {
         try{
             this.setLoadingInitial(true);
-            this.loading = true;
             const result = await agent.Topics.list(this.axiosParams);
             result.data.forEach(topic =>{
                 topic.createdAt = new Date(topic.createdAt!)
@@ -191,6 +190,31 @@ export default class TopicStore{
             runInAction(() => {
                this.topicRegistry.delete(id);
                this.loading = false
+            })
+
+        }catch(error){
+            console.log(error);
+
+            runInAction(() => {
+                this.loading = false;
+            })
+        }
+    }
+
+    likeTopic = async (id: string) =>{
+        this.loading = true;
+
+        try{
+            await agent.Topics.like(id);
+
+            runInAction(() => {
+                if(this.selectedTopic!.isLiked)
+                    this.selectedTopic!.likes -= 1;
+                else
+                this.selectedTopic!.likes += 1;
+
+                this.selectedTopic!.isLiked = !this.selectedTopic!.isLiked;
+                this.loading = false
             })
 
         }catch(error){

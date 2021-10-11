@@ -45,15 +45,15 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<TopicDto>>(topics);
         }
 
-        public async Task UpdateAsync(string displayName, string bio, CancellationToken cancellationToken = default)
+        public async Task<Profile> UpdateAsync(string displayName, string bio, CancellationToken cancellationToken = default)
         {
             string username = _userAccessor.GetUsername();
 
-            await UpdateAsync(username, displayName, bio, cancellationToken);
+           return await UpdateAsync(username, displayName, bio, cancellationToken);
 
         }
 
-        public async Task UpdateAsync(string username, string displayName, string bio, CancellationToken cancellationToken = default)
+        public async Task<Profile> UpdateAsync(string username, string displayName, string bio, CancellationToken cancellationToken = default)
         {
            
             var user = await _unitOfWork.UserRepository.GetByUsername(username, cancellationToken = default);
@@ -71,6 +71,8 @@ namespace Application.Services
             var result = await _unitOfWork.SaveChangesAsync();
 
             if (!result) throw new ProfileUpdateException("Problem updating user");
+
+            return _mapper.Map<Profile>(user);
         }
     }
 }
