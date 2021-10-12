@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -49,7 +47,7 @@ namespace Application.Services
 
         public async  Task<PhotoDto> CreateAsync(IFormFile file, CancellationToken cancellationToken = default)
         {
-            string username = _userAccessor.GetUsername();
+            var username = _userAccessor.GetUsername();
 
             var user = await _unitOfWork.UserRepository.GetByUsername(username,  cancellationToken);
             if (user == null) throw new UserNotFound(username);

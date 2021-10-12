@@ -62,7 +62,7 @@ const Topics = {
     listByCategory: (categoryId: string, params: URLSearchParams) => axios.get<PaginatedResult<Topic[]>>(`/Topics/category/${categoryId}`, {params}).then(responseBody),
     details: (id: string) => requests.get<Topic>(`/Topics/${id}`),
     create: (topic: TopicFormValues) => requests.post('/Topics', topic),
-    update: (topic: TopicFormValues) => requests.put(`/Topics`, topic),
+    update: (id: string, topic: TopicFormValues) => requests.put(`/Topics/${id}`, topic),
     delete: (id: string) => requests.del<void>(`/Topics/${id}`),
     like: (id: string) => requests.post(`/Topics/${id}/like`, {})
 

@@ -5,6 +5,7 @@ using Contracts;
 using Contracts.Paging;
 using Contracts.Services;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -58,14 +59,14 @@ namespace API.Controllers
 
             return Ok();
         }
-
-        [HttpPut]
-        public async Task<IActionResult> EditTopic(TopicDto topicDto)
+        [Authorize(Policy = "IsCreatorOrAdmin")]
+        [HttpPut("{topicId}")]
+        public async Task<IActionResult> EditTopic(Guid topicId, TopicDto topicDto)
         {
             await ServiceManager.TopicService.UpdateAsync(topicDto);
             return Ok();
         }
-        
+        [Authorize(Policy = "IsCreatorOrAdmin")]
         [HttpDelete("{topicId}")]
         public async Task<IActionResult> DeleteTopic(Guid topicId)
         {

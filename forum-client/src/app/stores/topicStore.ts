@@ -129,13 +129,13 @@ export default class TopicStore{
         } catch(error){
             console.log(error);
 
-           
         }
+        history.push('/topics')
     }
 
     updateTopic = async (topic: TopicFormValues) => {
         try{
-            await agent.Topics.update(topic);
+            await agent.Topics.update(topic.id, topic);
 
             runInAction(() => {
                 if(topic.id){

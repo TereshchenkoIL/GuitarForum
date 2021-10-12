@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using API.DTO;
 using AutoMapper;
 using Contracts;
 using Contracts.Interfaces;
-using Contracts.Paging;
 using Contracts.Services;
 using Domain.Entities;
 using Domain.Exceptions.CommentExceptions;
@@ -21,12 +18,10 @@ namespace Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly IUserAccessor _userAccessor;
-        public CommentService(IUnitOfWork unitOfWork, IMapper mapper, IUserAccessor userAccessor)
+        public CommentService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _userAccessor = userAccessor;
         }
         public async Task<CommentDto> GetByIdAsync(Guid commentId, CancellationToken cancellationToken = default)
         {
@@ -39,9 +34,9 @@ namespace Application.Services
 
         public async Task<IEnumerable<CommentDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            var coments = await _unitOfWork.CommentRepository.GetAllAsync( cancellationToken);
+            var comments = await _unitOfWork.CommentRepository.GetAllAsync( cancellationToken);
 
-            return _mapper.Map<IEnumerable<CommentDto>>(coments);
+            return _mapper.Map<IEnumerable<CommentDto>>(comments);
         }
 
         public async Task<IEnumerable<CommentDto>> GetAllByTopicAsync(Guid topicId, CancellationToken cancellationToken = default)
@@ -78,7 +73,7 @@ namespace Application.Services
 
         public async Task DeleteAsync(Guid commentId, CancellationToken cancellationToken = default)
         {
-            var comment = await _unitOfWork.CommentRepository.GetByIdAsync(commentId);
+            var comment = await _unitOfWork.CommentRepository.GetByIdAsync(commentId, cancellationToken);
             _unitOfWork.CommentRepository.Delete(comment);
 
             var result = await  _unitOfWork.SaveChangesAsync(cancellationToken);

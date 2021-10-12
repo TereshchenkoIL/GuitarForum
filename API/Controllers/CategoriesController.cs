@@ -2,10 +2,12 @@
 using System.Threading.Tasks;
 using Contracts;
 using Contracts.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class CategoriesController : BaseApiController
     {
         public CategoriesController(IServiceManager serviceManager) : base(serviceManager)
@@ -13,6 +15,7 @@ namespace API.Controllers
         }
 
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -20,7 +23,7 @@ namespace API.Controllers
 
             return Ok(categories);
         }
-        
+        [Authorize]
         [HttpGet("{categoryId}")]
         public async Task<IActionResult> GetById(Guid categoryId)
         {

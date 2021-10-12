@@ -26,62 +26,20 @@ namespace Application.Services
             _photoAccessor = photoAccessor;
         }
 
-        public ICategoryService CategoryService
-        {
-            get
-            {
-                if (_categoryService == null)
-                    _categoryService = new CategoryService(_unitOfWork, _mapper);
-                return _categoryService;
-            }
-        }
+        public ICategoryService CategoryService => _categoryService ??= new CategoryService(_unitOfWork, _mapper);
+       
 
-        public ICommentService CommentService
-        {
-            get
-            {
-                if (_commentService == null)
-                    _commentService = new CommentService(_unitOfWork, _mapper, _userAccessor);
-                return _commentService;
-            }
-        }
+        public ICommentService CommentService =>
+            _commentService ??= new CommentService(_unitOfWork, _mapper);
+        
 
-        public ILikeService LikeService
-        {
-            get
-            {
-                if (_likeService == null)
-                    _likeService = new LikeService(_unitOfWork, _mapper, _userAccessor);
-                return _likeService;
-            }
-        }
-        public IPhotoService PhotoService { 
-            get
-            {
-                if (_photoService == null)
-                    _photoService = new PhotoService(_unitOfWork, _mapper, _userAccessor, _photoAccessor);
-                return _photoService;
-            } 
-        }
+        public ILikeService LikeService => _likeService ??= new LikeService(_unitOfWork, _mapper, _userAccessor);
 
-        public IProfileService ProfileService
-        {
-            get
-            {
-                if (_profileService == null)
-                    _profileService = new ProfileService(_unitOfWork, _mapper, _userAccessor);
-                return _profileService;
-            }
-        }
+        public IPhotoService PhotoService => 
+            _photoService ??= new PhotoService(_unitOfWork, _mapper, _userAccessor, _photoAccessor);
 
-        public ITopicService TopicService
-        {
-            get
-            {
-                if (_topicService == null)
-                    _topicService = new TopicService(_unitOfWork, _mapper, _userAccessor);
-                return _topicService;
-            }
-        }
+        public IProfileService ProfileService => _profileService ?? (_profileService = new ProfileService(_unitOfWork, _mapper, _userAccessor));
+
+        public ITopicService TopicService => _topicService ?? (_topicService = new TopicService(_unitOfWork, _mapper, _userAccessor));
     }
 }

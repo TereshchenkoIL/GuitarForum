@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,7 +42,8 @@ namespace Application.Services
 
         public async Task CreateAsync(CategoryDto categoryForCreation, CancellationToken cancellationToken = default)
         {
-            _unitOfWork.CategoryRepository.Create(_mapper.Map<Category>(categoryForCreation));
+            var category = _mapper.Map<Category>(categoryForCreation);
+            _unitOfWork.CategoryRepository.Create(category);
 
             var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
 

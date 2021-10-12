@@ -4,12 +4,14 @@ using System.Threading.Tasks;
 using API.DTO;
 using API.Services;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
+    [AllowAnonymous]
     [ApiController]
     [Route("api/[controller]")]
     public class AccountController : ControllerBase
@@ -110,7 +112,7 @@ namespace API.Controllers
                 return new UserDto
                 {
                     DisplayName = user.DisplayName,
-                    Image = user.Photo.Url,
+                    Image = user.Photo?.Url,
                     Token = await _tokenService.CreateToken(user),
                     isAdmin = false,
                     Username = user.UserName

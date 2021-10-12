@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -40,7 +39,7 @@ namespace Application.Services
             
             var topicsDto =_mapper.Map<IEnumerable<TopicDto>>(topics);
 
-            await SetIsLiked(cancellationToken, topicsDto, topics);
+            await SetIsLiked( topicsDto, topics, cancellationToken);
 
             return topicsDto;
         }
@@ -66,12 +65,12 @@ namespace Application.Services
 
             var topicsDto = _mapper.Map<IEnumerable<TopicDto>>(topics);
             
-            await SetIsLiked(cancellationToken, topicsDto, topics);
+            await SetIsLiked( topicsDto, topics, cancellationToken);
 
             return  PagedList<TopicDto>.Create(topicsDto, pagingParams.PageNumber, pagingParams.PageSize);
         }
 
-        private async Task SetIsLiked(CancellationToken cancellationToken, IEnumerable<TopicDto> topicsDto, IEnumerable<Topic> topics)
+        private async Task SetIsLiked( IEnumerable<TopicDto> topicsDto, IEnumerable<Topic> topics, CancellationToken cancellationToken)
         {
             var currentUser = await _unitOfWork.UserRepository.GetByUsername(_userAccessor.GetUsername(), cancellationToken);
 
@@ -105,7 +104,7 @@ namespace Application.Services
 
             var topicsDto = _mapper.Map<IEnumerable<TopicDto>>(topics);
             
-            await SetIsLiked(cancellationToken, topicsDto, topics);
+            await SetIsLiked(topicsDto, topics, cancellationToken );
 
             return PagedList<TopicDto>.Create(topicsDto, pagingParams.PageNumber, pagingParams.PageSize);
         }
@@ -127,7 +126,7 @@ namespace Application.Services
 
         public async Task DeleteAsync(Guid topicId, CancellationToken cancellationToken = default)
         {
-            var topic = await _unitOfWork.TopicRepository.GetByIdAsync(topicId);
+            var topic = await _unitOfWork.TopicRepository.GetByIdAsync(topicId, cancellationToken);
 
             if (topic == null) throw new TopicNotFoundException(topicId);
              _unitOfWork.TopicRepository.Delete(topic);
@@ -141,7 +140,11 @@ namespace Application.Services
         {
             var topic = await _unitOfWork.TopicRepository.GetByIdAsync(topicForUpdation.Id, cancellationToken);
 
-            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(topicForUpdation.Category.Id);
+            if (topic == null) throw new TopicNotFoundException(topicForUpdation.Id);
+
+            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(topicForUpdation.Category.Id, cancellationToken);
+            if (category == null) throw new CategoryNotFoundException(topicForUpdation.Category.Id);
+            
             topic.Body = topicForUpdation.Body;
             topic.Title = topicForUpdation.Title;
             topic.Category = category;

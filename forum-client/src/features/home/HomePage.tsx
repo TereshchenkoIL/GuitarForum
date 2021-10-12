@@ -17,7 +17,7 @@ export default function HomePage(){
                 <>
                     <Header as="h2"  cpntent='Welcome to Guitar Forum' />
                     <Button as={Link} to='/topics' size='huge' >
-                        Go to Activities
+                        Go to Topics
                     </Button>
                 </>
             ) :

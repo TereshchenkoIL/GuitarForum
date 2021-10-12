@@ -11,9 +11,9 @@ export default function ValidationErrors({errors}:Props)
         <Message error>
             {errors && (
                 <MessageList>
-                    {errors.map((err: any, i: any) =>{
+                    {errors.hasOwnProperty('map')?  errors.map((err: any, i: any) =>{
                         return <Message.Item key={i}>{err}</Message.Item>
-                    })}
+                    }): errors.toString()}
                 </MessageList>
             )}
         </Message>

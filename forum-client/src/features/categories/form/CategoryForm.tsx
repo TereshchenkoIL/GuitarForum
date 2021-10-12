@@ -28,9 +28,9 @@ export default observer(function TopicForm(){
 
 
     useEffect(() => {
-        if (id) loadById(id).then(() => setCategory(new CategoryValues(selectedCategory!)));
+        if (id) loadById(id).then((category) => setCategory(new CategoryValues(selectedCategory!)));
 
-    }, [id,loadById]);
+    }, [id, loadById, selectedCategory]);
 
     function handleFormSubmit(values: Category){
         

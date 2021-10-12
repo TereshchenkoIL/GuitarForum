@@ -50,7 +50,8 @@ export default class UserStore{
     logout = () =>{
         this.setToken(null);
         window.localStorage.removeItem('jwt');
-        this.user = null;     
+        this.user = null;   
+        history.push('/')  
     }
 
     getUser = async () => {
@@ -73,6 +74,7 @@ export default class UserStore{
             
             history.push('/topics')
         }catch(error){
+            console.log(error)
             throw error;
         }
 

@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using Contracts;
 using Contracts.Interfaces;
 using Contracts.Services;
 using Domain.Exceptions.ProfileExceptions;
@@ -34,20 +31,11 @@ namespace Application.Services
             return _mapper.Map<Profile>(user);
         }
 
-        public async Task<IEnumerable<TopicDto>> GetTopics(string username, CancellationToken cancellationToken)
-        {
-            var user = await _unitOfWork.UserRepository.GetByUsername(username,  cancellationToken);
-
-            if (user == null) throw new UserNotFound(username);
-
-            var topics = _unitOfWork.TopicRepository.GetAllByCreatorIdAsync(user.Id,  cancellationToken);
-
-            return _mapper.Map<IEnumerable<TopicDto>>(topics);
-        }
+      
 
         public async Task<Profile> UpdateAsync(string displayName, string bio, CancellationToken cancellationToken = default)
         {
-            string username = _userAccessor.GetUsername();
+            var username = _userAccessor.GetUsername();
 
            return await UpdateAsync(username, displayName, bio, cancellationToken);
 
@@ -56,7 +44,7 @@ namespace Application.Services
         public async Task<Profile> UpdateAsync(string username, string displayName, string bio, CancellationToken cancellationToken = default)
         {
            
-            var user = await _unitOfWork.UserRepository.GetByUsername(username, cancellationToken = default);
+            var user = await _unitOfWork.UserRepository.GetByUsername(username, cancellationToken );
 
             if (!string.IsNullOrEmpty(displayName))
             {
@@ -68,7 +56,7 @@ namespace Application.Services
                 user.Bio = bio;
             }
 
-            var result = await _unitOfWork.SaveChangesAsync();
+            var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             if (!result) throw new ProfileUpdateException("Problem updating user");
 
