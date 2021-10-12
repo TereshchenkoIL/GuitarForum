@@ -4,6 +4,7 @@ import Category from "../models/category";
 import { Pagination, PagingParams } from "../models/pagination";
 import { Topic, TopicFormValues } from "../models/topic";
 import { store } from "./store";
+import { history } from "../..";
 
 export default class TopicStore{
     topicRegistry = new Map<string, Topic>();
@@ -124,6 +125,7 @@ export default class TopicStore{
             this.loadTopic(topic.id);
             this.selectedTopic!.createdAt = new Date(this.selectedTopic!.createdAt!)
             this.setTopic( this.selectedTopic!);
+            history.push('/topics')
         } catch(error){
             console.log(error);
 
@@ -146,6 +148,7 @@ export default class TopicStore{
                 }
 
             })
+            history.push('/topics')
 
         }catch(error)
         {

@@ -46,9 +46,12 @@ namespace Persistence
                 .WithOne(o => o.Owner)
                 .HasForeignKey<Photo>(p => p.OwnerId)
                 .OnDelete(DeleteBehavior.SetNull);
-            
-          
-            
+
+            builder.Entity<Topic>()
+                .HasOne(t => t.Category)
+                .WithMany(c => c.Topics)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }
