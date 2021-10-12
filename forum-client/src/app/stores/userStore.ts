@@ -79,7 +79,7 @@ export default class UserStore{
       
     }
 
-    setImage = (image: string) => {
+    setImage = (image: string | undefined) => {
        if(this.user) this.user.image = image;
     }
     

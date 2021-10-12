@@ -9,7 +9,9 @@
         public string Bio { get; set; }
 
         public string Image { get; set; }
-
+    
         public int TopicsCount { get; set; }
+
+        public PhotoDto Photo { get; set; }
     }
 }

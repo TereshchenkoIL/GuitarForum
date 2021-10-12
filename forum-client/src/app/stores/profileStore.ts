@@ -78,6 +78,25 @@ export default class ProfileStore{
             })
         }
     }
+    
+    deletePhoto = async(id: string) =>{
+        try{
+            await agent.Profiles.deletePhoto(id);
+
+            runInAction(() =>{
+               if(this.profile)
+               {
+                this.profile.image = undefined;
+                if(this.profile.username === store.userStore.user!.username)
+                {
+                    store.userStore.setImage(undefined);
+                }
+               }
+            })
+        } catch(error){
+            console.log(error)
+        }
+    }
 
 
     uploadPhoto = async (file: Blob) => {
@@ -102,4 +121,5 @@ export default class ProfileStore{
             runInAction(() => this.uploading = false);
         }
     }
+
 }

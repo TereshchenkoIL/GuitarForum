@@ -92,7 +92,8 @@ const Profiles = {
         })
     },
     updateProfile: (data: ProfileUpdateData) => requests.put<Profile>(`/profiles`,data),
-    getTopics: (username: string) => requests.get<Topic[]>(`profiles/${username}/topics`)
+    getTopics: (username: string) => requests.get<Topic[]>(`profiles/${username}/topics`),
+    deletePhoto: (id: string) => requests.del(`/photos/${id}`)
 }
 
 

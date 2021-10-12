@@ -11,7 +11,7 @@ interface Props{
 
 export default observer(function ProfilePhoto({profile}:Props){
 
-    const {profileStore: {isCurrentUser, uploadPhoto, uploading}} = useStore();
+    const {profileStore: {isCurrentUser, uploadPhoto, uploading, deletePhoto}, userStore:{isAdmin}} = useStore();
     const [addPhotoMode, setAddPhotoMode] = useState(false);
 
     function handlePhotoUpload(file: Blob){
@@ -23,11 +23,17 @@ export default observer(function ProfilePhoto({profile}:Props){
             <Grid>
                 <Grid.Column width={16}>
                     <Header floated='left' icon='image' content='Photo' />
+                    {profile.photo && (isCurrentUser || isAdmin)&& (
+                        <Button floated='right' basic color='red' content='Delete Photo' 
+                        onClick={() => deletePhoto(profile.photo.id)}
+                        />
+                    )}
                     {isCurrentUser && (
                         <Button floated='right' basic content={addPhotoMode? 'Cancel' : 'Add photo'} 
                         onClick={() => setAddPhotoMode(!addPhotoMode)}
                         />
                     )}
+
                 </Grid.Column>
                 <Grid.Column width={16}>
                     {addPhotoMode ? 
@@ -35,7 +41,7 @@ export default observer(function ProfilePhoto({profile}:Props){
                         (
 
                             <Card>
-                                <Image src={profile.photo?.url || '/assets/user.png'} />
+                                <Image src={profile.image || '/assets/user.png'} />
                             </Card>
                         )
                     }

@@ -73,8 +73,10 @@ namespace Application.Services
 
         public async Task DeleteAsync(string id, CancellationToken cancellationToken = default)
         {
+            var photo = await _unitOfWork.PhotoRepository.GetById(id, cancellationToken);
+            if (photo == null) throw new PhotoNotFoundException(id);
             
-            _unitOfWork.PhotoRepository.Delete(await _unitOfWork.PhotoRepository.GetById(id, cancellationToken));
+            _unitOfWork.PhotoRepository.Delete(photo);
             
             var cloudinaryResult = await _photoAccessor.DeletePhoto(id);
             
