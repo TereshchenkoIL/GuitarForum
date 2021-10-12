@@ -20,6 +20,14 @@ namespace API.Controllers
 
             return Ok(categories);
         }
+        
+        [HttpGet("{categoryId}")]
+        public async Task<IActionResult> GetById(Guid categoryId)
+        {
+            var category = await ServiceManager.CategoryService.GetByIdAsync(categoryId);
+
+            return Ok(category);
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateCategory(CategoryDto categoryDto)

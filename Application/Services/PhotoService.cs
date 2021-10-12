@@ -53,7 +53,9 @@ namespace Application.Services
 
             var user = await _unitOfWork.UserRepository.GetByUsername(username,  cancellationToken);
             if (user == null) throw new UserNotFound(username);
-            await DeleteAsync(user.Photo.Id, cancellationToken);
+            if(user.Photo != null)
+                await DeleteAsync(user.Photo.Id, cancellationToken);
+            
             var photoResult = await _photoAccessor.AddPhoto(file);
 
             var photoForCreation = new Photo
@@ -78,13 +80,15 @@ namespace Application.Services
             
             _unitOfWork.PhotoRepository.Delete(photo);
             
+            var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            if (!result) throw new PhotoDeleteException("Failed to delete the photo"); 
+            
             var cloudinaryResult = await _photoAccessor.DeletePhoto(id);
             
             if (cloudinaryResult == null) throw new CloudinaryException();
            
-            var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            if (!result) throw new PhotoDeleteException("Failed to delete the photo"); 
+           
             
            
         }

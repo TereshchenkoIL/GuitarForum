@@ -4,7 +4,7 @@ interface Props extends RouteProps {
     component: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
 }
 
-export default function PrivateRoute({ component: Component, ...rest }: Props) {
+export default function AdminRoute({ component: Component, ...rest }: Props) {
     const { userStore: { isAdmin } } = useStore();
     return (
         <Route

@@ -49,7 +49,7 @@ namespace API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
-            var user = await _userManager.FindByEmailAsync(loginDto.Email);
+            var user = await _userManager.Users.Include(p => p.Photo).FirstOrDefaultAsync(u => u.Email == loginDto.Email);
 
             if (user == null) return Unauthorized();
 
@@ -66,7 +66,8 @@ namespace API.Controllers
                     Image = user.Photo?.Url,
                     Token = await _tokenService.CreateToken(user),
                     isAdmin = isAdmin,
-                    Username = user.UserName
+                    Username = user.UserName,
+                    Bio = user.Bio
                 };
             }
 

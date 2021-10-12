@@ -21,13 +21,11 @@ export default observer(function NavBar() {
 
                 {isAdmin && (
                     <>
-                        <Menu.Item>
-                            <Menu.Item as={NavLink} to='/categories' content='Categories' />
-                        </Menu.Item>
+                        <Menu.Item as={NavLink} to='/categories' content='Categories' />
                     </>
                 )}
                 <Menu.Item position='right'>
-                    <Image src={user?.image || '/assets/user.png'} avatar spaced='right' />
+                    <Image src={user?.image  || '/assets/user.png'} avatar spaced='right' />
                     <Dropdown pointing='top right' text={user?.displayName}>
                         <Dropdown.Menu>
                             <Dropdown.Item as={Link} to={`/profiles/${user?.username}`} text='MyProfile' icon='user' />

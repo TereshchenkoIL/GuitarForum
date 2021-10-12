@@ -71,6 +71,7 @@ const Topics = {
 
 const Categories = {
     list: () => axios.get<Category[]>('/Categories').then(responseBody),
+    detail: (categoryId: string) => requests.get<Category>(`Categories/${categoryId}`),
     create: (category: Category) => requests.post('/Categories', category),
     update: (category: Category) => requests.put(`/Categories`, category),
     delete: (id: string) => requests.del<void>(`/Categories/${id}`),

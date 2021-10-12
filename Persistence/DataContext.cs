@@ -27,17 +27,28 @@ namespace Persistence
             builder.Entity<Like>()
                 .HasOne(u => u.AppUser)
                 .WithMany(t => t.Likes)
-                .HasForeignKey(l => l.AppUserId);
+                .HasForeignKey(l => l.AppUserId)
+                .OnDelete(DeleteBehavior.Cascade);;
             
             builder.Entity<Like>()
                 .HasOne(u => u.Topic)
                 .WithMany(t => t.Likes)
-                .HasForeignKey(l => l.TopicId);
+                .HasForeignKey(l => l.TopicId)
+                .OnDelete(DeleteBehavior.Cascade);;
 
             builder.Entity<Comment>()
                 .HasOne(t => t.Topic)
                 .WithMany(c => c.Comments)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<AppUser>()
+                .HasOne(p => p.Photo)
+                .WithOne(o => o.Owner)
+                .HasForeignKey<Photo>(p => p.OwnerId)
+                .OnDelete(DeleteBehavior.SetNull);
+            
+          
+            
         }
     }
 }

@@ -43,7 +43,7 @@ namespace Application.Services
 
         public async Task CreateAsync(CategoryDto categoryForCreation, CancellationToken cancellationToken = default)
         {
-            _unitOfWork.CategoryRepository.Create(_mapper.Map<Category>(cancellationToken));
+            _unitOfWork.CategoryRepository.Create(_mapper.Map<Category>(categoryForCreation));
 
             var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -63,7 +63,7 @@ namespace Application.Services
 
         public async Task UpdateAsync(CategoryDto categoryForUpdation, CancellationToken cancellationToken = default)
         {
-            _unitOfWork.CategoryRepository.Update(_mapper.Map<Category>(cancellationToken));
+            _unitOfWork.CategoryRepository.Update(_mapper.Map<Category>(categoryForUpdation));
 
             var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
             if (!result) throw new CategoryUpdateException(categoryForUpdation.Name);
