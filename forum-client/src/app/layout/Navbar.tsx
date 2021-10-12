@@ -6,7 +6,7 @@ import { useStore } from "../stores/store";
 
 
 export default observer(function NavBar() {
-    const { userStore: { user, logout } } = useStore();
+    const { userStore: { user, logout, isAdmin } } = useStore();
     return (
         <Menu inverted fixed='top'>
             <Container>
@@ -19,6 +19,13 @@ export default observer(function NavBar() {
                     <Button as={NavLink} to='/createTopic' positive content='Create Topic' />
                 </Menu.Item>
 
+                {isAdmin && (
+                    <>
+                        <Menu.Item>
+                            <Menu.Item as={NavLink} to='/categories' content='Categories' />
+                        </Menu.Item>
+                    </>
+                )}
                 <Menu.Item position='right'>
                     <Image src={user?.image || '/assets/user.png'} avatar spaced='right' />
                     <Dropdown pointing='top right' text={user?.displayName}>

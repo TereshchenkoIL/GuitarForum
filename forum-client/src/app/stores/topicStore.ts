@@ -18,31 +18,7 @@ export default class TopicStore{
     
     constructor(){
         makeAutoObservable(this);
-        reaction(
-            () => this.loadByCategory,
-            () => {
-                this.pagingParams = new PagingParams();
-                this.topicRegistry.clear();
-                if(this.loadByCategory){
-                    this.loadTopicsByCaetgory()
-                }else{
-                    this.loadAllTopics();
-                }
-            }
-        );
 
-        reaction(
-            () => this.category,
-            () => {
-                this.pagingParams = new PagingParams();
-                this.topicRegistry.clear();
-                if(this.loadByCategory){
-                    this.loadTopicsByCaetgory()
-                }else{
-                    this.loadAllTopics();
-                }
-            }
-        );
     }
 
     get axiosParams(){
@@ -68,7 +44,7 @@ export default class TopicStore{
         this.loadByCategory = state;
     }
 
-    setCategory = (category: Category) => {
+    setCategory = (category: Category | null) => {
         this.category = category;
     }
     get topicsByDate(){

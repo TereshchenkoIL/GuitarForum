@@ -4,12 +4,13 @@ import { Topic } from "../../../app/models/topic";
 import { format } from 'date-fns'
 import { Link } from "react-router-dom";
 import { useStore } from "../../../app/stores/store";
+import { observer } from "mobx-react-lite";
 
 interface Props{
     topic: Topic;
 }
 
-export default function TopicListItem({topic} : Props)
+export default observer( function TopicListItem({topic} : Props)
 {
     const {topicStore, userStore:{isAdmin, user}} = useStore();
     useEffect(() => {
@@ -23,7 +24,7 @@ export default function TopicListItem({topic} : Props)
                         <Item.Image style={{ marginBottom: 3 }} size='tiny' circular src={topic.creator?.image || '/assets/user.png'} />
                         <Item.Content>
                             <Item.Header as={Link} to={`/topics/${topic.id}`}>
-                                {topic.title}
+                                {topic.title} {topic.category.name}
                             </Item.Header>
                             <Item.Description>Created by <Link to={`/profiles/${topic.creator.username}`}> {topic.creator.displayName}</Link></Item.Description>
                     
@@ -58,4 +59,4 @@ export default function TopicListItem({topic} : Props)
             </Segment>
         </Segment.Group>
     );
-}
+})

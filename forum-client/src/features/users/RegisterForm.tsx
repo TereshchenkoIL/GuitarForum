@@ -19,7 +19,7 @@ export default observer(function RegisterForm(){
         <Formik
         initialValues={{displayName: '', username: '',email: '',bio:'', password: '', error: null}}
         onSubmit={(values, {setErrors}) => userStore.register(values).catch(error =>
-             setErrors({error})).then(() => history.push('/topics'))}
+             setErrors({error}))}
              validationSchema={Yup.object({
                  displayName: Yup.string().required(),
                  username: Yup.string().required(),
@@ -36,10 +36,15 @@ export default observer(function RegisterForm(){
                     <MyTextArea name='bio' placeholder='Bio' rows={3} />
                     <MyTextInput name='email' placeholder='Email' />
                     <MyTextInput name='password' placeholder='Password' type='password' />
-                    
+                    <ErrorMessage 
+                    name='error' render={() => 
+                    <ValidationErrors errors={errors.error}/>} />
+
+                   
                     <Button disabled={!isValid || !dirty || isSubmitting}
                      loading={isSubmitting} positive content='Register' type='submit' fluid />
                 </Form>
+                
             )}
         </Formik>
     );

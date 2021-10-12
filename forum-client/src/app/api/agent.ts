@@ -5,7 +5,7 @@ import { Photo, Profile, ProfileUpdateData } from "../models/profile";
 import { Topic, TopicFormValues } from "../models/topic";
 import { User, UserFormValues } from "../models/user";
 import { store } from "../stores/store";
-import {history} from '../..'
+
 
 axios.defaults.baseURL = 'http://localhost:5000/api'
 
@@ -30,9 +30,6 @@ axios.interceptors.response.use(async response => {
     switch(status){
         case 400:
 
-            if(config.method === 'get' && data.errors.hasOwnProperty('id')){
-                history.push('/not-found')
-            }
             if(data.errors){
                 const modelStateErrors = [];
 

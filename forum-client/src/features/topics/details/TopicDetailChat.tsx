@@ -13,7 +13,7 @@ interface Props{
 }
 
 export default observer(function TopicDetailChat({topicId}: Props){
-    const {commentStore} = useStore();
+    const {commentStore, userStore:{isAdmin, user}} = useStore();
     const{editMode, selectedComment, setEditMode, setSelectedComment} = commentStore;
 
 
@@ -113,11 +113,14 @@ export default observer(function TopicDetailChat({topicId}: Props){
                                 </Comment>
                             </Grid.Column>
                             <Grid.Column floated='right' width={5}  >
-                                <div >
+                                {(comment.username === user?.username || isAdmin) && (
+                                     <div >
                                     <Button onClick={() => commentStore.deleteComment(comment.id)} basic icon='trash alternate outline' color='red'/>
                                     <Button onClick={() =>  handleEditClick(comment)} basic icon='pencil alternate' color='orange'/>
                                   
                                 </div>
+                                )}
+                               
                             </Grid.Column>
                         </Grid>
                            

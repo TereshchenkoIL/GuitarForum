@@ -7,15 +7,14 @@ import TopicListItem from "./ListItem";
 export default observer( function TopicList(){
 
     const {topicStore} = useStore();
-    
-    const{topicsByDate} = topicStore
-    useEffect(() => {
-       })
+    const{topicsByDate} = topicStore;
+
+
     
     return(
         <>
         
-         {topicsByDate.map(topic => (
+        {topicsByDate.map(topic => (
              <TopicListItem key={topic.id} topic = {topic} />
          ))}
         </>
