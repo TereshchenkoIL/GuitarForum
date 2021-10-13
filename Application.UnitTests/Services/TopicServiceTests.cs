@@ -18,20 +18,20 @@ namespace Application.UnitTests.Services
     public class TopicServiceTests : ServiceTestsBase
     {
         [Test]
-        public async Task GetAllByCreatorIdAsync_WhenCalledWithExistingId_ReturnsTopics()
+        public async Task GetAllByCreatorUsernameAsync_WhenCalledWithExistingUsername_ReturnsTopics()
         {
-            var user = new AppUser() {Id = "Id"};
+            var user = new AppUser() {Id="Id", UserName = "username"};
 
             var topic = new Topic() {Title = "Title"};
             _userRepository.Setup(u =>
-                    u.GetByUserIdAsync("Id", It.IsAny<CancellationToken>()))
+                    u.GetByUsernameAsync("username", It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(user));
             
             _topicRepository.Setup(t =>
                     t.GetAllByCreatorIdAsync("Id", It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(new List<Topic>(){topic}.AsEnumerable()));
 
-           var topics = await _serviceManager.TopicService.GetAllByCreatorIdAsync("Id", CancellationToken.None);
+           var topics = await _serviceManager.TopicService.GetAllByCreatorUsernameAsync("username", CancellationToken.None);
            
            
            _topicRepository.Verify(t => t.GetAllByCreatorIdAsync("Id", It.IsAny<CancellationToken>()));
@@ -40,14 +40,14 @@ namespace Application.UnitTests.Services
         }
 
         [Test]
-        public void GetAllByCreatorIdAsync_WhenCalledWithNonExistingId_ThrowsUserNotFound()
+        public void GetAllByCreatorIdAsync_WhenCalledWithNonExistingUsername_ThrowsUserNotFound()
         {
-            var user = new AppUser() {Id = "Id"};
+            var user = new AppUser() {UserName="username", Id = "Id"};
             _userRepository.Setup(u =>
-                    u.GetByUserIdAsync("Id", It.IsAny<CancellationToken>()))
+                    u.GetByUsernameAsync("username",  It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(user));
             
-            Assert.ThrowsAsync<UserNotFound>(() =>_serviceManager.TopicService.GetAllByCreatorIdAsync("NonExistingId", CancellationToken.None));
+            Assert.ThrowsAsync<UserNotFound>(() =>_serviceManager.TopicService.GetAllByCreatorUsernameAsync("NonExistingId", CancellationToken.None));
         }
 
         [Test]

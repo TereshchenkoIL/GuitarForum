@@ -36,13 +36,7 @@ namespace API.Controllers
             return HandlePagedResult(topics);
         }
         
-        [HttpGet("creator/{id}")]
-        public async Task<ActionResult<List<TopicDto>>> GetAllTopics(string id)
-        {
-            var topics = await ServiceManager.TopicService.GetAllByCreatorIdAsync(id);
-
-            return Ok(topics);
-        }
+        
         
         [HttpGet("{id}")]
         public async Task<ActionResult<List<TopicDto>>> GetTopicById(Guid id)

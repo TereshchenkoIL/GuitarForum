@@ -25,3 +25,8 @@ export interface ProfileUpdateData{
     displayName?: string;
     bio?: string;
 }
+
+export interface ProfileActivityValue{
+    date: string,
+    count: number
+}

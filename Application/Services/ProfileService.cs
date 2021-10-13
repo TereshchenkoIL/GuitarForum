@@ -1,6 +1,9 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using Contracts;
 using Contracts.Interfaces;
 using Contracts.Services;
 using Domain.Exceptions.ProfileExceptions;
@@ -61,6 +64,20 @@ namespace Application.Services
             if (!result) throw new ProfileUpdateException("Problem updating user");
 
             return _mapper.Map<Profile>(user);
+        }
+
+        public async Task<IEnumerable<ContributionResult>> GetProfileActivity(string username, CancellationToken cancellationToken = default)
+        {
+            var user = await _unitOfWork.UserRepository.GetByUsernameAsync(username, cancellationToken);
+
+            if (user == null) throw new UserNotFound(username);
+
+            return user.Topics.OrderBy(t => t.CreatedAt).GroupBy(t => t.CreatedAt.Date).Select(group =>
+                new ContributionResult
+                {
+                    Date = @group.Key.ToString("yyyy-MM-dd"),
+                    Count = @group.Count()
+                }).ToList();
         }
     }
 }

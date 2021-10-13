@@ -8,6 +8,7 @@ import { store, StoreContext } from './app/stores/store';
 import {  Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history'
 import 'react-datepicker/dist/react-datepicker.css'
+import 'react-calendar-heatmap/dist/styles.css';
 
 export const history = createBrowserHistory();
 

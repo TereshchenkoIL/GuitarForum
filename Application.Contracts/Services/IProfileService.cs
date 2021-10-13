@@ -14,5 +14,8 @@ namespace Contracts.Services
         
         Task<Profile> UpdateAsync(string username, string displayName, string bio, CancellationToken cancellationToken = default);
 
+        Task<IEnumerable<ContributionResult>> GetProfileActivity(string userId,
+            CancellationToken cancellationToken = default);
+
     }
 }

@@ -9,5 +9,7 @@ namespace Domain.Repositories
         Task<AppUser> GetByUserIdAsync(string userId,  CancellationToken cancellationToken);
         
         Task<AppUser> GetByUsernameAsync(string username,  CancellationToken cancellationToken);
+        
+        
     }
 }

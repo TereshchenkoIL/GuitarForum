@@ -1,7 +1,10 @@
-﻿namespace Contracts
+﻿using System;
+
+namespace Contracts
 {
     public class Profile
     {
+        
         public string Username { get; set; }
 
         public string DisplayName { get; set; }

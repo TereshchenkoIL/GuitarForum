@@ -29,13 +29,13 @@ namespace Application.Services
             _userAccessor = userAccessor;
         }
 
-        public async Task<IEnumerable<TopicDto>> GetAllByCreatorIdAsync(string creatorId, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<TopicDto>>  GetAllByCreatorUsernameAsync(string username, CancellationToken cancellationToken = default)
         {
-            var creator = await _unitOfWork.UserRepository.GetByUserIdAsync(creatorId,  cancellationToken);
+            var creator = await _unitOfWork.UserRepository.GetByUsernameAsync(username,  cancellationToken);
 
-            if (creator == null) throw new UserNotFound(creatorId);
+            if (creator == null) throw new UserNotFound(username);
             
-            var topics = await _unitOfWork.TopicRepository.GetAllByCreatorIdAsync(creatorId,  cancellationToken);
+            var topics = await _unitOfWork.TopicRepository.GetAllByCreatorIdAsync(creator.Id,  cancellationToken);
             
             var topicsDto =_mapper.Map<IEnumerable<TopicDto>>(topics);
 

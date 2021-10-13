@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
-import { Profile, ProfileUpdateData } from "../models/profile";
+import { Profile, ProfileActivityValue, ProfileUpdateData } from "../models/profile";
 import { Topic } from "../models/topic";
 import { store } from "./store";
 
@@ -10,6 +10,7 @@ export default class ProfileStore{
     uploading = false;
     topics: Topic[] = []
     loading = true;
+    activity: ProfileActivityValue[] = []
     constructor(){
         makeAutoObservable(this)
     }
@@ -119,6 +120,24 @@ export default class ProfileStore{
         } catch (error) {
             console.log(error);
             runInAction(() => this.uploading = false);
+        }
+    }
+
+    loadActivity = async(username: string) => {
+        this.loading = true;
+        try{
+            const activity = await agent.Profiles.getProfileActivity(username);
+          console.log(activity)
+            runInAction(() => {
+                this.loading = false;
+                this.activity = activity;
+                
+            })
+        }catch(error){
+            console.log(error)
+            runInAction(() => {
+                this.loading = false;
+            })
         }
     }
 

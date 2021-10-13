@@ -1,10 +1,11 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
 import Category from "../models/category";
 import { PaginatedResult } from "../models/pagination";
-import { Photo, Profile, ProfileUpdateData } from "../models/profile";
+import { Photo, Profile, ProfileActivityValue, ProfileUpdateData } from "../models/profile";
 import { Topic, TopicFormValues } from "../models/topic";
 import { User, UserFormValues } from "../models/user";
 import { store } from "../stores/store";
+
 
 
 axios.defaults.baseURL = 'http://localhost:5000/api'
@@ -94,7 +95,8 @@ const Profiles = {
     },
     updateProfile: (data: ProfileUpdateData) => requests.put<Profile>(`/profiles`,data),
     getTopics: (username: string) => requests.get<Topic[]>(`profiles/${username}/topics`),
-    deletePhoto: (id: string) => requests.del(`/photos/${id}`)
+    deletePhoto: (id: string) => requests.del(`/photos/${id}`),
+    getProfileActivity: (username: string) => requests.get<ProfileActivityValue[]>(`profiles/${username}/activity`)
 }
 
 

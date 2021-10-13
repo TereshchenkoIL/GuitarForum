@@ -3,6 +3,7 @@ import React from "react";
 import { Tab } from "semantic-ui-react";
 import { Profile } from "../../app/models/profile";
 import ProfileAbout from "./ProfileAbout";
+import ProfileActivity from "./ProfileActivity";
 import ProfilePhoto from "./ProfilePhoto";
 import ProfileTopics from "./ProfileTopics";
 
@@ -16,6 +17,7 @@ export default observer(function ProfileContent({profile}: Props){
         {menuItem: 'About', render: () => <ProfileAbout />},
         {menuItem: 'Topics', render: () => <ProfileTopics profile={profile}/>},
         {menuItem: 'Photo', render: () => <ProfilePhoto profile={profile}/>},
+        {menuItem: 'Activity', render: () => <ProfileActivity profile={profile}/>},
     ]
 
     return(

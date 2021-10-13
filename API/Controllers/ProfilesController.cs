@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using API.DTO;
 using Contracts.Services;
 using Domain.Entities;
@@ -35,11 +36,15 @@ namespace API.Controllers
         [HttpGet("{username}/topics")]
         public async Task<IActionResult> GetTopics(string username)
         {
-            var user = await _userManager.FindByNameAsync(username);
-            if (user == null) throw new UserNotFound(username);
-            
-            var topics = await ServiceManager.TopicService.GetAllByCreatorIdAsync(user.Id);
+            var topics = await ServiceManager.TopicService.GetAllByCreatorUsernameAsync(username);
             return Ok(topics);
+        }
+
+        [HttpGet("{username}/activity")]
+        public async Task<IActionResult> GetProfileActivity(string username)
+        {
+            var activity = await ServiceManager.ProfileService.GetProfileActivity(username);
+            return Ok(activity);
         }
     }
 }
