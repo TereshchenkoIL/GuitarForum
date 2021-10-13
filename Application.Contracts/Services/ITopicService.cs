@@ -10,7 +10,6 @@ namespace Contracts.Services
     public interface ITopicService 
     {
        Task<IEnumerable<TopicDto>> GetAllByCreatorIdAsync(string creatorId, CancellationToken cancellationToken = default);
-       Task<IEnumerable<TopicDto>> GetAllByCreatorUsernameAsync(string username, CancellationToken cancellationToken = default);
        
        Task<PagedList<TopicDto>> GetAllByCategoryIdAsync(Guid categoryId, PagingParams pagingParams, CancellationToken cancellationToken = default);
         

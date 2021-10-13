@@ -49,7 +49,7 @@ namespace Application.Services
         {
             var username = _userAccessor.GetUsername();
 
-            var user = await _unitOfWork.UserRepository.GetByUsername(username,  cancellationToken);
+            var user = await _unitOfWork.UserRepository.GetByUsernameAsync(username,  cancellationToken);
             if (user == null) throw new UserNotFound(username);
             if(user.Photo != null)
                 await DeleteAsync(user.Photo.Id, cancellationToken);

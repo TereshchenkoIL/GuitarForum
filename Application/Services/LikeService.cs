@@ -31,7 +31,7 @@ namespace Application.Services
 
         public async Task<LikeDto> GetLike(string userId, Guid topicId,  CancellationToken cancellationToken = default)
         {
-            var user = await _unitOfWork.UserRepository.GetByUserId(userId,  cancellationToken);
+            var user = await _unitOfWork.UserRepository.GetByUserIdAsync(userId,  cancellationToken);
 
             if (user == null) throw new UserNotFound(userId);
             
@@ -59,7 +59,7 @@ namespace Application.Services
         public async Task ToggleLikeAsync(Guid topicId, CancellationToken cancellationToken = default)
         {
             var username = _userAccessor.GetUsername();
-            var user = await _unitOfWork.UserRepository.GetByUsername(username,  cancellationToken);
+            var user = await _unitOfWork.UserRepository.GetByUsernameAsync(username,  cancellationToken);
             if (user == null) throw new UserNotFound(username);
 
             var topic = await _unitOfWork.TopicRepository.GetByIdAsync(topicId,  cancellationToken);

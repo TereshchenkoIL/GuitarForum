@@ -12,7 +12,7 @@ namespace Persistence.Repositories
         {
         }
 
-        public async Task<AppUser> GetByUserId(string userId,  CancellationToken cancellationToken)
+        public async Task<AppUser> GetByUserIdAsync(string userId,  CancellationToken cancellationToken)
         {
             return await Context.Users
                     .Include(p => p.Photo)
@@ -20,7 +20,7 @@ namespace Persistence.Repositories
                     .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken: cancellationToken);
         }
 
-        public async Task<AppUser> GetByUsername(string username, CancellationToken cancellationToken)
+        public async Task<AppUser> GetByUsernameAsync(string username, CancellationToken cancellationToken)
         {
             return  await Context.Users
                     .Include(p => p.Photo)

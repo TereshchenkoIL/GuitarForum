@@ -1,49 +1,18 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Mapping;
-using Application.Services;
-using AutoMapper;
 using Contracts;
-using Contracts.Interfaces;
-using Contracts.Services;
 using Domain.Entities;
 using Domain.Exceptions.CategoryExceptions;
-using Domain.Repositories;
-using Infrastructure.Photos;
-using Infrastructure.Security;
 using Moq;
 using NUnit.Framework;
 
 namespace Application.UnitTests.Services
 {
     [TestFixture]
-    public class CategoryServiceTests
+    public class CategoryServiceTests : ServiceTestsBase
     {
-         private IServiceManager _serviceManager;
-         private readonly IMapper _mapper;
-         private readonly Mock<IUnitOfWork> _unitOfWork;
-         private readonly Mock<IUserAccessor> _userAccesor;
-         private readonly Mock<IPhotoAccessor> _photoAccesor;
-         
-         public CategoryServiceTests()
-         {
-             {
-                 var mappingConfig = new MapperConfiguration(mc =>
-                 {
-                     mc.AddProfile(new MappingProfiles());
-                 });
-                 IMapper mapper = mappingConfig.CreateMapper();
-                 _mapper = mapper;
-             }
-
-             _unitOfWork = new Mock<IUnitOfWork>();
-             _userAccesor = new Mock<IUserAccessor>();
-             _photoAccesor = new Mock<IPhotoAccessor>();
-             _serviceManager =
-                 new ServiceManager(_unitOfWork.Object, _mapper, _userAccesor.Object, _photoAccesor.Object);
-         }
-
+        
          [Test]
          public async Task GetByIdAsync_WhenCalledWithExistingId_ReturnCategory()
          {
@@ -58,7 +27,7 @@ namespace Application.UnitTests.Services
          }
          
          [Test]
-         public async Task GetByIdAsync_WhenCalledWithNonExistingId_ThrowCategoryNotFoundException()
+         public void GetByIdAsync_WhenCalledWithNonExistingId_ThrowCategoryNotFoundException()
          {
              _unitOfWork.Setup(u => u.CategoryRepository
                      .GetByIdAsync(Guid.Empty, CancellationToken.None))
@@ -85,9 +54,9 @@ namespace Application.UnitTests.Services
          {
              var category = new CategoryDto {Id = Guid.Empty, Name = "Test"};
              
-             _unitOfWork.Setup(u =>  u.SaveChangesAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(true));
+             _unitOfWork.Setup(u =>  u.SaveChangesAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(false));
 
-             Assert.Throws<CategoryCreateException>(() => _serviceManager.CategoryService.CreateAsync(category));
+             Assert.ThrowsAsync<CategoryCreateException>(() => _serviceManager.CategoryService.CreateAsync(category));
 
 
          }
@@ -122,7 +91,7 @@ namespace Application.UnitTests.Services
          {
              var category = new CategoryDto {Id = Guid.Empty, Name = "Test"};
              
-             _unitOfWork.Setup(u =>  u.SaveChangesAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(true));
+             _unitOfWork.Setup(u =>  u.SaveChangesAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(false));
 
              Assert.ThrowsAsync<CategoryUpdateException>(() => _serviceManager.CategoryService.UpdateAsync(category));
 

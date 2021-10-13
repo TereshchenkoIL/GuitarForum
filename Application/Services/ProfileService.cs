@@ -24,7 +24,7 @@ namespace Application.Services
         }
         public async Task<Profile> GetDetails(string username, CancellationToken cancellationToken = default)
         {
-            var user = await _unitOfWork.UserRepository.GetByUsername(username,  cancellationToken);
+            var user = await _unitOfWork.UserRepository.GetByUsernameAsync(username,  cancellationToken);
 
             if (user == null) throw new UserNotFound(username);
 
@@ -44,7 +44,7 @@ namespace Application.Services
         public async Task<Profile> UpdateAsync(string username, string displayName, string bio, CancellationToken cancellationToken = default)
         {
            
-            var user = await _unitOfWork.UserRepository.GetByUsername(username, cancellationToken );
+            var user = await _unitOfWork.UserRepository.GetByUsernameAsync(username, cancellationToken );
 
             if (!string.IsNullOrEmpty(displayName))
             {

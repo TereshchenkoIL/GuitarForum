@@ -2,6 +2,7 @@
 using API.DTO;
 using Contracts.Services;
 using Domain.Entities;
+using Domain.Exceptions.UserException;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,8 +35,10 @@ namespace API.Controllers
         [HttpGet("{username}/topics")]
         public async Task<IActionResult> GetTopics(string username)
         {
-            var topics = await ServiceManager.TopicService.GetAllByCreatorUsernameAsync(username);
-
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null) throw new UserNotFound(username);
+            
+            var topics = await ServiceManager.TopicService.GetAllByCreatorIdAsync(user.Id);
             return Ok(topics);
         }
     }

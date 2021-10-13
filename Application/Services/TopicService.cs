@@ -31,7 +31,7 @@ namespace Application.Services
 
         public async Task<IEnumerable<TopicDto>> GetAllByCreatorIdAsync(string creatorId, CancellationToken cancellationToken = default)
         {
-            var creator = await _unitOfWork.UserRepository.GetByUserId(creatorId,  cancellationToken);
+            var creator = await _unitOfWork.UserRepository.GetByUserIdAsync(creatorId,  cancellationToken);
 
             if (creator == null) throw new UserNotFound(creatorId);
             
@@ -44,16 +44,7 @@ namespace Application.Services
             return topicsDto;
         }
 
-        public async Task<IEnumerable<TopicDto>> GetAllByCreatorUsernameAsync(string username, CancellationToken cancellationToken = default)
-        {
-            var user = await _unitOfWork.UserRepository.GetByUsername(username,  cancellationToken);
-
-            if (user == null) throw new UserNotFound(username);
-
-            return await GetAllByCreatorIdAsync(user.Id,  cancellationToken);
-
-        }
-
+      
         public async Task<PagedList<TopicDto>> GetAllByCategoryIdAsync(Guid categoryId, PagingParams pagingParams, CancellationToken cancellationToken = default)
         {
             var category = await _unitOfWork.CategoryRepository.GetByIdAsync(categoryId,  cancellationToken);
@@ -72,7 +63,7 @@ namespace Application.Services
 
         private async Task SetIsLiked( IEnumerable<TopicDto> topicsDto, IEnumerable<Topic> topics, CancellationToken cancellationToken)
         {
-            var currentUser = await _unitOfWork.UserRepository.GetByUsername(_userAccessor.GetUsername(), cancellationToken);
+            var currentUser = await _unitOfWork.UserRepository.GetByUsernameAsync(_userAccessor.GetUsername(), cancellationToken);
 
             foreach (var topic in topicsDto)
             {
@@ -90,7 +81,7 @@ namespace Application.Services
             if (topic == null) throw new TopicNotFoundException(topicId);
             
             var topicDto = _mapper.Map<TopicDto>(topic);
-            var currentUser = await _unitOfWork.UserRepository.GetByUsername(_userAccessor.GetUsername(), cancellationToken);
+            var currentUser = await _unitOfWork.UserRepository.GetByUsernameAsync(_userAccessor.GetUsername(), cancellationToken);
             if(currentUser != null)
                 topicDto.IsLiked = topic.Likes.Any(l => l.AppUserId == currentUser.Id);
             
@@ -111,8 +102,12 @@ namespace Application.Services
 
         public async Task CreateAsync(TopicDto topicForCreation, CancellationToken cancellationToken = default)
         {
-            var user = await _unitOfWork.UserRepository.GetByUsername(_userAccessor.GetUsername(), cancellationToken);
+            var user = await _unitOfWork.UserRepository.GetByUsernameAsync(_userAccessor.GetUsername(), cancellationToken);
+            if (user == null) throw new UserNotFound(_userAccessor.GetUsername());
+            
             var category = await _unitOfWork.CategoryRepository.GetByIdAsync(topicForCreation.Category.Id,cancellationToken);
+            if (category == null) throw new CategoryNotFoundException(topicForCreation.Category.Id);
+            
             var topic = _mapper.Map<Topic>(topicForCreation);
             topic.Creator = user;
             topic.CreatedAt = DateTime.UtcNow;

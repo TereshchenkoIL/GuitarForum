@@ -56,7 +56,7 @@ namespace Application.Services
 
             
 
-            var user = await _unitOfWork.UserRepository.GetByUsername(commentForCreation.Username, cancellationToken);
+            var user = await _unitOfWork.UserRepository.GetByUsernameAsync(commentForCreation.Username, cancellationToken);
            
             var topic = await _unitOfWork.TopicRepository.GetByIdAsync(commentForCreation.TopicId, cancellationToken);
             if (topic == null) throw new TopicNotFoundException(commentForCreation.TopicId);
