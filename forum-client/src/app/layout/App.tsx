@@ -3,6 +3,7 @@ import { Route } from 'react-router';
 import { Container } from 'semantic-ui-react';
 import CategoryDashboard from '../../features/categories/dashboard/CategoryDashboard';
 import CategoryForm from '../../features/categories/form/CategoryForm';
+import NotFound from '../../features/errors/NotFound';
 import HomePage from '../../features/home/HomePage';
 import ProfilePage from '../../features/profile/ProfilePage';
 import TopicDashboard from '../../features/topics/dashboard/TopicDashboard';
@@ -36,8 +37,7 @@ function App() {
             <AuthorizedRoute path='/topics/:id' exact component={TopicDetail} /> 
             <AuthorizedRoute path='/profiles/:username' exact component={ProfilePage} />
             <AdminRoute path='/categories' exact component={CategoryDashboard} />
-            
-
+            <Route component={NotFound} />           
           </> 
         )}/>
       </Container>

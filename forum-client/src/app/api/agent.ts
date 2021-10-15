@@ -5,7 +5,8 @@ import { Photo, Profile, ProfileActivityValue, ProfileUpdateData } from "../mode
 import { Topic, TopicFormValues } from "../models/topic";
 import { User, UserFormValues } from "../models/user";
 import { store } from "../stores/store";
-
+import { history } from "../..";
+import { toast } from "react-toastify";
 
 
 axios.defaults.baseURL = 'http://localhost:5000/api'
@@ -30,7 +31,9 @@ axios.interceptors.response.use(async response => {
     const {data, status, config} = error.response!;
     switch(status){
         case 400:
-
+            if(config.method === 'get' && data.errors.hasOwnProperty('id')){
+                history.push('/not-found')
+            }
             if(data.errors){
                 const modelStateErrors = [];
 
@@ -42,6 +45,12 @@ axios.interceptors.response.use(async response => {
                 throw modelStateErrors.flat();
             }
             
+            break;
+        case 401:
+            toast.error('unauthorized');
+            break;
+        case 404:
+            history.push('/not-found')
             break;
         }
         return Promise.reject(error);
