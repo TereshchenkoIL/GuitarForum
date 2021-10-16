@@ -18,7 +18,7 @@ export default observer(function TopicDashboard() {
     async function handleGetNext(){
         setLoadingNext(true);
         setPagingParams(new PagingParams(pagination!.currentPage +1))
-        await sleep(300);
+        await sleep(400);
         if(loadByCategory){
 
             loadTopicsByCaetgory().then(() => setLoadingNext(false))

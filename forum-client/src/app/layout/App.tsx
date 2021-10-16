@@ -37,7 +37,7 @@ function App() {
             <AuthorizedRoute path='/topics/:id' exact component={TopicDetail} /> 
             <AuthorizedRoute path='/profiles/:username' exact component={ProfilePage} />
             <AdminRoute path='/categories' exact component={CategoryDashboard} />
-            <Route component={NotFound} />           
+            <Route path='/notFound' component={NotFound} />           
           </> 
         )}/>
       </Container>

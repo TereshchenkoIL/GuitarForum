@@ -24,7 +24,7 @@ export default observer( function TopicListItem({topic} : Props)
                         <Item.Image style={{ marginBottom: 3 }} size='tiny' circular src={topic.creator?.image || '/assets/user.png'} />
                         <Item.Content>
                             <Item.Header as={Link} to={`/topics/${topic.id}`}>
-                                {topic.title} {topic.category.name}
+                                {topic.title} 
                             </Item.Header>
                             <Item.Description>Created by <Link to={`/profiles/${topic.creator.username}`}> {topic.creator.displayName}</Link></Item.Description>
                     
