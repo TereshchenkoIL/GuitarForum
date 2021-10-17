@@ -9,6 +9,7 @@ import {  Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history'
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-calendar-heatmap/dist/styles.css';
+import 'react-toastify/dist/ReactToastify.css';
 import ScrollToTop from './app/layout/ScrollToTop';
 
 export const history = createBrowserHistory();

@@ -18,7 +18,7 @@ export default observer( function CategoryListItem({category} : Props)
     
     return (
         <Segment.Group>
-            <Segment>
+            <Segment key={category.id}>
             
                 <Item.Group>
                     <Item key={category.id}>

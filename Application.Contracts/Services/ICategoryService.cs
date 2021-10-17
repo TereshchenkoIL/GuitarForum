@@ -15,5 +15,7 @@ namespace Contracts.Services
         Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
        
         Task UpdateAsync(CategoryDto categoryForUpdation, CancellationToken cancellationToken = default);
+
+        Task<CategoryDto> GetByNameAsync(string name, CancellationToken cancellationToken = default);
     }
 }

@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import Category, { CategoryValues } from "../models/category";
 import { history } from "../..";
+import { toast } from "react-toastify";
 
 export default class CategoryStore{
     categories: Category[] = [];
@@ -69,7 +70,7 @@ export default class CategoryStore{
 
             history.push('/categories')
         }catch(error){
-            console.log(error)
+          throw error;
         }
     }
 
@@ -84,6 +85,7 @@ export default class CategoryStore{
             history.push('/categories')
         }catch(error){
             console.log(error)
+           throw error
         }
     }
 

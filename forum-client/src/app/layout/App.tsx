@@ -15,12 +15,14 @@ import AdminRoute from '../common/Routes/AdminRoute';
 import AuthorizedRoute from '../common/Routes/AuthorizedRoute';
 import './App.css';
 import Navbar from './Navbar';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (
     <>
       
       <Container style={{ marginTop: '7em' }}>
+        <ToastContainer position='bottom-right' hideProgressBar />
         <Route path='/' exact component={HomePage} /> 
         <Route path='/login' exact component={LoginForm}/>
         <Route path='/register' exact component={RegisterForm}/>

@@ -19,5 +19,7 @@ namespace Domain.Entities
         
         public ICollection<Topic> Topics { get; set; }
         public ICollection<Like> Likes { get; set; }
+
+        public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
     }
 }

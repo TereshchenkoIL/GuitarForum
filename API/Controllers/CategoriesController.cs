@@ -35,6 +35,12 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCategory(CategoryDto categoryDto)
         {
+            var category = await ServiceManager.CategoryService.GetByNameAsync(categoryDto.Name);
+            if (category != null)
+            {
+                ModelState.AddModelError("name", $"Category {categoryDto.Name} exists");
+                return ValidationProblem(ModelState);
+            }
             await ServiceManager.CategoryService.CreateAsync(categoryDto);
 
             return Ok();
@@ -43,6 +49,12 @@ namespace API.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateCategory(CategoryDto categoryDto)
         {
+            var category = await ServiceManager.CategoryService.GetByNameAsync(categoryDto.Name);
+            if (category != null && categoryDto.Id != category.Id)
+            {
+                ModelState.AddModelError("name", $"Category {categoryDto.Name} exists");
+                return ValidationProblem(ModelState);
+            }
             await ServiceManager.CategoryService.UpdateAsync(categoryDto);
 
             return Ok();
